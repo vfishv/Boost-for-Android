@@ -27,10 +27,13 @@
 # Command line arguments
 # -----------------------
 
+
+
+
 BOOST_VER1=1
-BOOST_VER2=53
+BOOST_VER2=64
 BOOST_VER3=0
-register_option "--boost=<version>" boost_version "Boost version to be used, one of {1.55.0, 1.54.0, 1.53.0, 1.49.0, 1.48.0, 1.45.0}, default is 1.53.0."
+register_option "--boost=<version>" boost_version "Boost version to be used, one of {1.64.0, 1.55.0, 1.54.0, 1.53.0, 1.49.0, 1.48.0, 1.45.0}, default is 1.53.0."
 boost_version()
 {
   if [ "$1" = "1.55.0" ]; then
@@ -54,6 +57,10 @@ boost_version()
     BOOST_VER2=48
     BOOST_VER3=0
   elif [ "$1" = "1.45.0" ]; then
+    BOOST_VER1=1
+    BOOST_VER2=45
+    BOOST_VER3=0
+  elif [ "$1" = "1.64.0" ]; then
     BOOST_VER1=1
     BOOST_VER2=45
     BOOST_VER3=0
@@ -195,77 +202,84 @@ case "$HOST_OS" in
         PlatformOS=linux
 esac
 
-NDK_RELEASE_FILE=$AndroidNDKRoot"/RELEASE.TXT"
-if [ -f "${NDK_RELEASE_FILE}" ]; then
-    NDK_RN=`cat $NDK_RELEASE_FILE | sed 's/^r\(.*\)$/\1/g'`
-elif [ -n "${AndroidSourcesDetected}" ]; then
-    if [ -f "${ANDROID_BUILD_TOP}/ndk/docs/CHANGES.html" ]; then
-        NDK_RELEASE_FILE="${ANDROID_BUILD_TOP}/ndk/docs/CHANGES.html"
-        NDK_RN=`grep "android-ndk-" "${NDK_RELEASE_FILE}" | head -1 | sed 's/^.*r\(.*\)$/\1/'`
-    elif [ -f "${ANDROID_BUILD_TOP}/ndk/docs/text/CHANGES.text" ]; then
-        NDK_RELEASE_FILE="${ANDROID_BUILD_TOP}/ndk/docs/text/CHANGES.text"
-        NDK_RN=`grep "android-ndk-" "${NDK_RELEASE_FILE}" | head -1 | sed 's/^.*r\(.*\)$/\1/'`
-    else
-        dump "ERROR: can not find ndk version"
-        exit 1
-    fi
-else
-    dump "ERROR: can not find ndk version"
-    exit 1
-fi
+# NDK_RELEASE_FILE=$AndroidNDKRoot"/RELEASE.TXT"
+# if [ -f "${NDK_RELEASE_FILE}" ]; then
+#     NDK_RN=`cat $NDK_RELEASE_FILE | sed 's/^r\(.*\)$/\1/g'`
+# elif [ -n "${AndroidSourcesDetected}" ]; then
+#     if [ -f "${ANDROID_BUILD_TOP}/ndk/docs/CHANGES.html" ]; then
+#         NDK_RELEASE_FILE="${ANDROID_BUILD_TOP}/ndk/docs/CHANGES.html"
+#         NDK_RN=`grep "android-ndk-" "${NDK_RELEASE_FILE}" | head -1 | sed 's/^.*r\(.*\)$/\1/'`
+#     elif [ -f "${ANDROID_BUILD_TOP}/ndk/docs/text/CHANGES.text" ]; then
+#         NDK_RELEASE_FILE="${ANDROID_BUILD_TOP}/ndk/docs/text/CHANGES.text"
+#         NDK_RN=`grep "android-ndk-" "${NDK_RELEASE_FILE}" | head -1 | sed 's/^.*r\(.*\)$/\1/'`
+#     else
+#         dump "ERROR: can not find ndk version"
+#         exit 1
+#     fi
+# else
+#     dump "ERROR: can not find ndk version"
+#     exit 1
+# fi
 
-echo "Detected Android NDK version $NDK_RN"
+# echo "Detected Android NDK version $NDK_RN"
+# 
+# case "$NDK_RN" in
+# 	4*)
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-eabi-4.4.0}
+# 		CXXPATH=$AndroidNDKRoot/build/prebuilt/$PlatformOS-x86/${TOOLCHAIN}/bin/arm-eabi-g++
+# 		TOOLSET=gcc-androidR4
+# 		;;
+# 	5*)
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.4.3}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR5
+# 		;;
+# 	7-crystax-5.beta3)
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6.3}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR7crystax5beta3
+# 		;;
+# 	8)
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.4.3}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR8
+# 		;;
+# 	8b|8c|8d)
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR8b
+# 		;;
+# 	8e|9|9b|9c|9d)
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR8e
+# 		;;
+# 	"8e (64-bit)")
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/${PlatformOS}-x86_64/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR8e
+# 		;;
+# 	"9 (64-bit)"|"9b (64-bit)"|"9c (64-bit)"|"9d (64-bit)")
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/${PlatformOS}-x86_64/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR8e
+# 		;;
+# 	"10 (64-bit)"|"10b (64-bit)"|"10c (64-bit)"|"10d (64-bit)")
+# 		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
+# 		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/${PlatformOS}-x86_64/bin/arm-linux-androideabi-g++
+# 		TOOLSET=gcc-androidR8e
+# 		;;
+# 	*)
+# 		echo "Undefined or not supported Android NDK version!"
+# 		exit 1
+# esac
 
-case "$NDK_RN" in
-	4*)
-		TOOLCHAIN=${TOOLCHAIN:-arm-eabi-4.4.0}
-		CXXPATH=$AndroidNDKRoot/build/prebuilt/$PlatformOS-x86/${TOOLCHAIN}/bin/arm-eabi-g++
-		TOOLSET=gcc-androidR4
-		;;
-	5*)
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.4.3}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR5
-		;;
-	7-crystax-5.beta3)
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6.3}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR7crystax5beta3
-		;;
-	8)
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.4.3}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR8
-		;;
-	8b|8c|8d)
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR8b
-		;;
-	8e|9|9b|9c|9d)
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/$PlatformOS-x86/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR8e
-		;;
-	"8e (64-bit)")
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/${PlatformOS}-x86_64/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR8e
-		;;
-	"9 (64-bit)"|"9b (64-bit)"|"9c (64-bit)"|"9d (64-bit)")
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/${PlatformOS}-x86_64/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR8e
-		;;
-	"10 (64-bit)"|"10b (64-bit)"|"10c (64-bit)"|"10d (64-bit)")
-		TOOLCHAIN=${TOOLCHAIN:-arm-linux-androideabi-4.6}
-		CXXPATH=$AndroidNDKRoot/toolchains/${TOOLCHAIN}/prebuilt/${PlatformOS}-x86_64/bin/arm-linux-androideabi-g++
-		TOOLSET=gcc-androidR8e
-		;;
-	*)
-		echo "Undefined or not supported Android NDK version!"
-		exit 1
-esac
+
+TOOLCHAIN=arm-linux-androideabi-4.9
+CXXPATH=$NDK_DIR/toolchains/${TOOLCHAIN}/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++
+TOOLSET=gcc-android
+
+		
 
 if [ -n "${AndroidSourcesDetected}" ]; then # Overwrite CXXPATH if we are building from Android sources
     CXXPATH="${ANDROID_TOOLCHAIN}/arm-linux-androideabi-g++"
@@ -340,41 +354,41 @@ then
   # -------------------------------------------------------------
   # Patching will be done only if we had a successfull bootstrap!
   # -------------------------------------------------------------
-
-  # Apply patches to boost
-  BOOST_VER=${BOOST_VER1}_${BOOST_VER2}_${BOOST_VER3}
-  PATCH_BOOST_DIR=$PROGDIR/patches/boost-${BOOST_VER}
-
-  cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/v2/user-config.jam
-
-  for dir in $PATCH_BOOST_DIR; do
-    if [ ! -d "$dir" ]; then
-      echo "Could not find directory '$dir' while looking for patches"
-      exit 1
-    fi
-
-    PATCHES=`(cd $dir && ls *.patch | sort) 2> /dev/null`
-
-    if [ -z "$PATCHES" ]; then
-      echo "No patches found in directory '$dir'"
-      exit 1
-    fi
-
-    for PATCH in $PATCHES; do
-      PATCH=`echo $PATCH | sed -e s%^\./%%g`
-      SRC_DIR=$PROGDIR/$BOOST_DIR
-      PATCHDIR=`dirname $PATCH`
-      PATCHNAME=`basename $PATCH`
-      log "Applying $PATCHNAME into $SRC_DIR/$PATCHDIR"
-      cd $SRC_DIR && patch -p1 < $dir/$PATCH && cd $PROGDIR
-      if [ $? != 0 ] ; then
-        dump "ERROR: Patch failure !! Please check your patches directory!"
-        dump "       Try to perform a clean build using --clean ."
-        dump "       Problem patch: $dir/$PATCHNAME"
-        exit 1
-      fi
-    done
-  done
+# 
+#   # Apply patches to boost
+   BOOST_VER=${BOOST_VER1}_${BOOST_VER2}_${BOOST_VER3}
+  # PATCH_BOOST_DIR=$PROGDIR/patches/boost-${BOOST_VER}
+ 
+   cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/v2/user-config.jam
+# 
+#   for dir in $PATCH_BOOST_DIR; do
+#     if [ ! -d "$dir" ]; then
+#       echo "Could not find directory '$dir' while looking for patches"
+#       exit 1
+#     fi
+# 
+#     PATCHES=`(cd $dir && ls *.patch | sort) 2> /dev/null`
+# 
+#     if [ -z "$PATCHES" ]; then
+#       echo "No patches found in directory '$dir'"
+#       exit 1
+#     fi
+# 
+#     for PATCH in $PATCHES; do
+#       PATCH=`echo $PATCH | sed -e s%^\./%%g`
+#       SRC_DIR=$PROGDIR/$BOOST_DIR
+#       PATCHDIR=`dirname $PATCH`
+#       PATCHNAME=`basename $PATCH`
+#       log "Applying $PATCHNAME into $SRC_DIR/$PATCHDIR"
+#       cd $SRC_DIR && patch -p1 < $dir/$PATCH && cd $PROGDIR
+#       if [ $? != 0 ] ; then
+#         dump "ERROR: Patch failure !! Please check your patches directory!"
+#         dump "       Try to perform a clean build using --clean ."
+#         dump "       Problem patch: $dir/$PATCHNAME"
+#         exit 1
+#       fi
+#     done
+#   done
 fi
 
 echo "# ---------------"
@@ -399,7 +413,14 @@ echo "Building boost for android"
 
   cd $BOOST_DIR
 
+  echo "----------------------------" 
   echo "Adding pathname: `dirname $CXXPATH`"
+  echo "AndroidNDKRoot: $AndroidNDKRoot" 
+  echo "CXXFLAGS: $CXXFLAGS" 
+  echo "toolset $TOOLSET" 
+  echo "LIBRARIES $LIBRARIES" 
+  echo "----------------------------" 
+  
   # `AndroidBinariesPath` could be used by user-config-boost-*.jam
   export AndroidBinariesPath=`dirname $CXXPATH`
   export PATH=$AndroidBinariesPath:$PATH
