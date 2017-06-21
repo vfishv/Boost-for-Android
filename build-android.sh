@@ -360,7 +360,7 @@ then
   # PATCH_BOOST_DIR=$PROGDIR/patches/boost-${BOOST_VER}
  
    #cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/v2/user-config.jam
-   cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/user-config.jam
+   cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/src/user-config.jam
 # 
 #   for dir in $PATCH_BOOST_DIR; do
 #     if [ ! -d "$dir" ]; then
