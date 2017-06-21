@@ -277,7 +277,7 @@ esac
 
 TOOLCHAIN=arm-linux-androideabi-4.9
 CXXPATH=$NDK_DIR/toolchains/${TOOLCHAIN}/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++
-TOOLSET=gcc-android
+TOOLSET=gcc
 
 		
 
@@ -359,7 +359,8 @@ then
    BOOST_VER=${BOOST_VER1}_${BOOST_VER2}_${BOOST_VER3}
   # PATCH_BOOST_DIR=$PROGDIR/patches/boost-${BOOST_VER}
  
-   cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/v2/user-config.jam
+   #cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/v2/user-config.jam
+   cp configs/user-config-boost-${BOOST_VER}.jam $BOOST_DIR/tools/build/user-config.jam
 # 
 #   for dir in $PATCH_BOOST_DIR; do
 #     if [ ! -d "$dir" ]; then
@@ -434,7 +435,7 @@ echo "Building boost for android"
          target-os=linux              \
          toolset=$TOOLSET             \
          $cxxflags                    \
-         link=static                  \
+         link=shared                  \
          threading=multi              \
          --layout=versioned           \
          --without-python             \
