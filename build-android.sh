@@ -432,12 +432,14 @@ echo "Building boost for android"
   for flag in $CXXFLAGS; do cxxflags="$cxxflags cxxflags=$flag"; done
 
   { ./bjam -q                         \
-         target-os=linux              \
+         target-os=android            \
          toolset=$TOOLSET             \
          $cxxflags                    \
          link=shared                  \
+         runtime-link=shared          \
+         binary-format=elf            \
          threading=multi              \
-         --layout=versioned           \
+         --layout=system           \
          --without-python             \
          -sICONV_PATH=`pwd`/../libiconv-libicu-android/armeabi \
          -sICU_PATH=`pwd`/../libiconv-libicu-android/armeabi \
@@ -446,6 +448,8 @@ echo "Building boost for android"
          install 2>&1                 \
          || { dump "ERROR: Failed to build boost for android!" ; exit 1 ; }
   } | tee -a $PROGDIR/build.log
+  
+
 
   # PIPESTATUS variable is defined only in Bash, and we are using /bin/sh, which is not Bash on newer Debian/Ubuntu
 )
