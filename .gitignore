@@ -6,3 +6,4 @@ build.log
 *.swp
 *.vim
 *.sh.kate-swp
+/build_16_4_0_a/

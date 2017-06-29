@@ -62,7 +62,7 @@ boost_version()
     BOOST_VER3=0
   elif [ "$1" = "1.64.0" ]; then
     BOOST_VER1=1
-    BOOST_VER2=45
+    BOOST_VER2=64
     BOOST_VER3=0
   else
     echo "Unsupported boost version '$1'."
@@ -70,9 +70,30 @@ boost_version()
   fi
 }
 
+# Translate commas to spaces
+# Usage: str=`commas_to_spaces <list>`
+commas_to_spaces ()
+{
+    echo "$@" | tr ',' ' '
+}
+
 register_option "--toolchain=<toolchain>" select_toolchain "Select a toolchain. To see available execute ls -l ANDROID_NDK/toolchains."
 select_toolchain () {
     TOOLCHAIN=$1
+}
+
+register_option "--abis=<abis>" select_abis "Specifiy abis to build with eg --abis=armeabi-v7a,x86,x86_64"
+select_abis () {
+
+    ABIS=$1
+    ABIS=$(commas_to_spaces $ABIS)
+    
+    echo "ABIS = $ABIS"
+    for ABI in $ABIS; do
+        echo "ABI = $ABI"
+    done
+    
+    exit 1
 }
 
 CLEAN=no
@@ -431,7 +452,19 @@ echo "Building boost for android"
   cxxflags=""
   for flag in $CXXFLAGS; do cxxflags="$cxxflags cxxflags=$flag"; done
 
-  { ./bjam -q                         \
+  # mkdir /home/declan/Documents/zone/mid/lib/boost/boost_for_android/build
+  
+#   
+#         variant=release         \
+#         address-model=32        \
+#         architecture=arm        \
+#         abi=aapcs               \
+
+#         -sICONV_PATH=`pwd`/../libiconv-libicu-android/armeabi \
+#         -sICU_PATH=`pwd`/../libiconv-libicu-android/armeabi \
+        
+  { ./b2 -d+2 -q -j4                      \
+         variant=release         \
          target-os=android            \
          toolset=$TOOLSET             \
          $cxxflags                    \
@@ -441,9 +474,7 @@ echo "Building boost for android"
          threading=multi              \
          --layout=system           \
          --without-python             \
-         -sICONV_PATH=`pwd`/../libiconv-libicu-android/armeabi \
-         -sICU_PATH=`pwd`/../libiconv-libicu-android/armeabi \
-         --prefix="./../$BUILD_DIR/"  \
+         --prefix="./../$BUILD_DIR"  \
          $LIBRARIES                   \
          install 2>&1                 \
          || { dump "ERROR: Failed to build boost for android!" ; exit 1 ; }
