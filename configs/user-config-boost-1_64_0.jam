@@ -36,7 +36,7 @@
 # ------------------
 # Android configurations.
 # ------------------
-echo (******************************* in copied_user_jam *******************************\n) 
+echo (******************************* in copied_user_jam 2 *******************************\n) 
 echo (**************************************************************\n) 
 echo (**************************************************************\n) 
 echo (**************************************************************\n) 
@@ -44,7 +44,8 @@ echo (**************************************************************\n)
 
 # import os ;
 # # local AndroidNDKRoot = [ os.environ AndroidNDKRoot ] ;
- local AndroidNDKRoot=/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle;
+ #local AndroidNDKRoot=/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle;
+  local AndroidNDKRoot=/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle/toolchains/standalone/arm-linux-androideabi-4.9
 # 
 # import option ; 
 # using gcc : arm : /home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++ ; 
@@ -54,87 +55,46 @@ echo (**************************************************************\n)
 # --------------------------------------------------------------------
 using gcc : android
 :
-arm-linux-androideabi-g++
+$(AndroidNDKRoot)/arm-linux-androideabi-g++
 :
-<archiver>arm-linux-androideabi-ar
+<archiver>$(AndroidNDKRoot)/bin/arm-linux-androideabi-ar
 <compileflags>-fexceptions
 <compileflags>-frtti
-
+<compileflags>-fpic
 <compileflags>-ffunction-sections
 <compileflags>-funwind-tables
-#<compileflags>-D__ARM_ARCH_5__
-#<compileflags>-D__ARM_ARCH_5T__
-#<compileflags>-D__ARM_ARCH_5E__
-#<compileflags>-D__ARM_ARCH_5TE__
 <compileflags>-Wno-psabi
-
-<compileflags>-mtune=xscale
-#<compileflags>-msoft-float
+<compileflags>-march=armv7-a
+<compileflags>-msoft-float
+<compileflags>-mfpu=neon
 <compileflags>-mthumb
+<linkflags>-march=armv7-a
+<linkflags>-Wl,--fix-cortex-a8
 <compileflags>-Os
 <compileflags>-fomit-frame-pointer
-<compileflags>-fno-strict-aliasing
+<compileflag>-fno-strict-aliasing
 <compileflags>-finline-limit=64
-<compileflags>-I$(AndroidNDKRoot)/platforms/android-9/arch-arm/usr/include
 <compileflags>-Wa,--noexecstack
-
+<compileflags>-DANDROID
+<compileflags>-D__ANDROID__
 <compileflags>-DNDEBUG
 <compileflags>-O2
 <compileflags>-g
-<compileflags>-I$(AndroidNDKRoot)/sources/cxx-stl/gnu-libstdc++/4.9/include
-<compileflags>-I$(AndroidNDKRoot)/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include
-
+<root>$(AndroidNDKRoot)/sysroot
+# @Moss - Above are the 'official' android flags
 <architecture>arm
 <compileflags>-fvisibility=hidden
 <compileflags>-fvisibility-inlines-hidden
 <compileflags>-fdata-sections
-#<cxxflags>-D__arm__
+<cxxflags>-D__arm__
 <cxxflags>-D_REENTRANT
 <cxxflags>-D_GLIBCXX__PTHREADS
-
-<compileflags>-fPIC
-<compileflags>-march=armv7-a
-<compileflags>-mfpu=vfpv3-d16
-<compileflags>-mfloat-abi=softfp 
-<compileflags>-std=c++14 
-<compileflags>-finline
-
--x
-c++
--c
--fPIC
--DANDROID
--DANDROID_NDK
-<compileflags>-DANDROID
-<compileflags>-DANDROID_NDK
-
--I/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include
--I/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/include
--I/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward
-
--ffunction-sections
--funwind-tables
--fstack-protector
--no-canonical-prefixes
--march=armv7-a
--mfpu=vfpv3-d16
--mfloat-abi=softfp
--mthumb
--Os
--g
--DNDEBUG
--fomit-frame-pointer
--fno-strict-aliasing
--finline-limit=64
--std=c++14
--frtti
--fexceptions
--I
-
-<linkflags>--sysroot=$(AndroidNDKRoot)/platforms/android-9/arch-arm
+<compileflags>-Wno-long-long
+<compileflags>-Wno-missing-field-initializers
+<compileflags>-Wno-unused-variable
 ;
 
-
+option.set keep-going : false ; 
 # ------------------
 # GCC configuration.
 # ------------------

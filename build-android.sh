@@ -184,44 +184,44 @@ if [ -d "$PROGDIR/$BUILD_DIR" ]; then
 fi
 
 
-AndroidNDKRoot=$PARAMETERS
-if [ -z "$AndroidNDKRoot" ] ; then
-  if [ -n "${ANDROID_BUILD_TOP}" ]; then # building from Android sources
-    AndroidNDKRoot="${ANDROID_BUILD_TOP}/prebuilts/ndk/current"
-    export AndroidSourcesDetected=1
-  elif [ -z "`which ndk-build`" ]; then
-    dump "ERROR: You need to provide a <ndk-root>!"
-    exit 1
-  else
-    AndroidNDKRoot=`which ndk-build`
-    AndroidNDKRoot=`dirname $AndroidNDKRoot`
-  fi
-  echo "Using AndroidNDKRoot = $AndroidNDKRoot"
-else
-  # User passed the NDK root as a parameter. Make sure the directory
-  # exists and make it an absolute path.
-  if [ ! -f "$AndroidNDKRoot/ndk-build" ]; then
-    dump "ERROR: $AndroidNDKRoot is not a valid NDK root"
-    exit 1
-  fi
-  AndroidNDKRoot=$(cd $AndroidNDKRoot; pwd -P)
-fi
-export AndroidNDKRoot
-
-# Check platform patch
-case "$HOST_OS" in
-    linux)
-        PlatformOS=linux
-        ;;
-    darwin|freebsd)
-        PlatformOS=darwin
-        ;;
-    windows|cygwin)
-        PlatformOS=windows
-        ;;
-    *)  # let's play safe here
-        PlatformOS=linux
-esac
+# AndroidNDKRoot=$PARAMETERS
+# if [ -z "$AndroidNDKRoot" ] ; then
+#   if [ -n "${ANDROID_BUILD_TOP}" ]; then # building from Android sources
+#     AndroidNDKRoot="${ANDROID_BUILD_TOP}/prebuilts/ndk/current"
+#     export AndroidSourcesDetected=1
+#   elif [ -z "`which ndk-build`" ]; then
+#     dump "ERROR: You need to provide a <ndk-root>!"
+#     exit 1
+#   else
+#     AndroidNDKRoot=`which ndk-build`
+#     AndroidNDKRoot=`dirname $AndroidNDKRoot`
+#   fi
+#   echo "Using AndroidNDKRoot = $AndroidNDKRoot"
+# else
+#   # User passed the NDK root as a parameter. Make sure the directory
+#   # exists and make it an absolute path.
+#   if [ ! -f "$AndroidNDKRoot/ndk-build" ]; then
+#     dump "ERROR: $AndroidNDKRoot is not a valid NDK root"
+#     exit 1
+#   fi
+#   AndroidNDKRoot=$(cd $AndroidNDKRoot; pwd -P)
+# fi
+# export AndroidNDKRoot
+# 
+# # Check platform patch
+# case "$HOST_OS" in
+#     linux)
+#         PlatformOS=linux
+#         ;;
+#     darwin|freebsd)
+#         PlatformOS=darwin
+#         ;;
+#     windows|cygwin)
+#         PlatformOS=windows
+#         ;;
+#     *)  # let's play safe here
+#         PlatformOS=linux
+# esac
 
 # NDK_RELEASE_FILE=$AndroidNDKRoot"/RELEASE.TXT"
 # if [ -f "${NDK_RELEASE_FILE}" ]; then
@@ -297,7 +297,7 @@ esac
 
 
 TOOLCHAIN=arm-linux-androideabi-4.9
-CXXPATH=$NDK_DIR/toolchains/${TOOLCHAIN}/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++
+CXXPATH=/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle/toolchains/standalone/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-g++
 TOOLSET=gcc
 
 		
@@ -465,7 +465,7 @@ echo "Building boost for android"
         
   { ./b2 -d+2 -q -j4                      \
          variant=release         \
-         target-os=android            \
+         target-os=linux            \
          toolset=$TOOLSET             \
          $cxxflags                    \
          link=shared                  \
