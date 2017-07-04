@@ -84,8 +84,8 @@ model {
 
 
 
-            boost_chrono    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/libboost_chrono.so") } }
-            boost_system    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/libboost_system.so") } }
+            boost_chrono    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/${targetPlatform.getName()}/llvm-3.5/libboost_chrono.so") } }
+            boost_system    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/${targetPlatform.getName()}/llvm-3.5/libboost_system.so") } }
 
             //--------------------------------------
         }
