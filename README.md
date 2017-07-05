@@ -1,5 +1,7 @@
 # Boost for Android
 
+**Note:** This **branch is deprecated**. Its maintained here for reference purposes. Please use the [master branch](https://github.com/dec1/Boost-for-Android) instead.
+
 
 Modified [original](https://github.com/moritz-wundke/Boost-for-Android)  to allow modern boost versions (eg boost 1.64.0)
 
