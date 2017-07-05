@@ -19,9 +19,6 @@ extern "C"
         string Str("hi from C++, boost should give some meaningful info here \:");
 
 
-
-
-
         boost::chrono::system_clock::time_point p  = boost::chrono::system_clock::now();
         std::time_t t = boost::chrono::system_clock::to_time_t(p);
 

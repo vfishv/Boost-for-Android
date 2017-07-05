@@ -35,11 +35,10 @@ def my_targetSdkVersion() { return my_compileSdkVersion().asType(Integer)}
 //---------------------------------------------------------------------------------------
 
 def want_gcc(){ return true}
-def libConfig() { return "debug"} // "debug" or "release"
 
 def tc_family()     { return want_gcc()? "gnu" : "llvm"}                        // "gnu"  (for gcc) or "llvm" (for clang)
 def tc_name()       { return want_gcc()? "gcc" : "clang" }                      // "gcc" or "clang"
-def tc_ver()        {return want_gcc()? "4.9" :  "3.5"}// "3.6", "3.7" (for clang)  or "4.9" , "5"  (for gcc)          // TODO .. doesnt seem to work with "4.9" version (of gnu)
+def tc_ver()        {return want_gcc()? "4.9" :  "3.5"}// "3.6", "3.7" (for clang)  or "4.9" , "5"  (for gcc)
 def std_lib ()     { return want_gcc()? "gnustl_shared" : "c++_shared"}               // "gnustl_shared" or "c++_shared"
 
 //---------------------
@@ -56,7 +55,7 @@ def platform_dir()      { return "${ndk_dir()}/platforms/android-${platform_ver(
 def boost_dir() { return local_props("boost.dir") }
 
  def boost_inc_dir() { return "${boost_dir()}/include" }
- def boost_lib_dir() { return "${boost_dir()}/lib" }
+ def boost_lib_dir() { return "${boost_dir()}/libs" }
 
 
 

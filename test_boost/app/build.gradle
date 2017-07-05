@@ -1,9 +1,6 @@
 apply plugin: 'com.android.model.application'
 
 //-------------------------------
-
-
-
 def my_inc =     [
 
         boost_inc_dir()
@@ -30,8 +27,6 @@ model {
             versionName = '1.0'
         }
 
-
-
         ndk {
             moduleName = 'test_boost'
             //------------------------------
@@ -47,6 +42,7 @@ model {
             ldLibs.addAll(['log'])
             abiFilters.addAll(my_abis())
         }
+
         sources {
             main {
                 jni {
@@ -56,40 +52,30 @@ model {
                         srcDirs "src/main/jni"
                     }
 
-
                     dependencies {
 
                         library 'boost_chrono'              linkage 'shared'
                         library 'boost_system'              linkage 'shared'
 
-
-
-
                     }
                 }
             }
         }
+
         buildTypes {
             release {
                 minifyEnabled false
                 proguardFiles.add(file('proguard-android.txt'))
             }
         }
-
-
     }
 
     repositories {
         libs(PrebuiltLibraries) {
 
-
-
-            boost_chrono    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/${targetPlatform.getName()}/llvm-3.5/libboost_chrono.so") } }
-            boost_system    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/${targetPlatform.getName()}/llvm-3.5/libboost_system.so") } }
-
-            //--------------------------------------
+            boost_chrono    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/${targetPlatform.getName()}/${tc_family()}-${tc_ver()}/libboost_chrono.so") } }
+            boost_system    { binaries.withType(SharedLibraryBinary) { sharedLibraryFile = file("${boost_lib_dir()}/${targetPlatform.getName()}/${tc_family()}-${tc_ver()}/libboost_system.so") } }
         }
-
     }
 
     android.lintOptions {  // was getting lint error that apparently was a problemm with lint itself ... maybe doesnt know syntax of new gradle experimental properly yet?
@@ -100,7 +86,6 @@ model {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-     // compile project(':img_op')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.0.1'
 }
