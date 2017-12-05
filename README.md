@@ -3,7 +3,9 @@
 
 Builds the [Boost C++ Libraries](http://www.boost.org/) for the Android platform, with Google's Ndk.
 
-Tested with **Boost 1.65.1** and **Google's Ndk 15c**  (current versions as of Sept 2017)
+Tested with **Boost 1.65.1**, together with both  **Google's Ndk 15c**  (current versions as of Sept 2017) <br>
+and **Google's Ndk 16** (now shipping with Android Studio 3) 
+*- please use the [ndk_16 branch](https://github.com/dec1/Boost-for-Android/tree/ndk_16) for this*
 
 [Crystax](https://www.crystax.net/) is an excellent alternative to Google's Ndk. It ships with prebuilt boost binaries, and dedicated build scripts.
 These binaries will however not work with Goolge's Ndk. If for some reason you can't or don't want to use Crystax then you can't use their boost binaries or build scripts.
