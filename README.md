@@ -3,9 +3,7 @@
 
 Builds the [Boost C++ Libraries](http://www.boost.org/) for the Android platform, with Google's Ndk.
 
-Tested with **Boost 1.65.1**, together with both  **Google's Ndk 15c**  (current versions as of Sept 2017) <br>
-and **Google's Ndk 16b** (now shipping with Android Studio 3) 
-*- please use the [ndk_16 branch](https://github.com/dec1/Boost-for-Android/tree/ndk_16) for this*
+Tested with **Boost 1.65.1**, together with both Google's **Ndk 15c** and **Ndk 16b** (*please use the [ndk_16 branch](https://github.com/dec1/Boost-for-Android/tree/ndk_16) for the latter*) <br> - current versions as of Dec 2017
 
 [Crystax](https://www.crystax.net/) is an excellent alternative to Google's Ndk. It ships with prebuilt boost binaries, and dedicated build scripts.
 These binaries will however not work with Goolge's Ndk. If for some reason you can't or don't want to use Crystax then you can't use their boost binaries or build scripts.
@@ -23,7 +21,7 @@ Creates binaries for multiple abis (**armeabi-v7a**, **x86**, mips etc).
 
 * *gcc* (required to configure boost, regardless of whether ndk's gcc or clang is used to build it. So install gcc with your os package manager or ensure the ndk version is on your path)
 
-* You may need to have *libncurses.so.5* available on you development machine. Install via your os package manager (eg Yast) if necessary.
+* You may need to have *libncurses.so.5* and a base python package (including *pyconfig.h*) available on you development machine. Install via your os package manager (eg Yast) if necessary.
 
 
 * Create a symbolic link *llvm-3.5* to *llvm* in the *toolchains* subdir of the ndk *(This is only necessary if you want to be able to build with clang)*
