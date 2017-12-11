@@ -19,6 +19,21 @@ Creates binaries for multiple abis (**armeabi-v7a**, **x86**, mips etc).
 
 *Tested with a development machine running OpenSuse Tumbleweed Linux.*
 
+## Prerequisites
+
+* *gcc* (required to configure boost, regardless of whether ndk's gcc or clang is used to build it. So install gcc with your os package manager or ensure the ndk version is on your path)
+
+* You may need to have *libncurses.so.5* available on you development machine. Install via your os package manager (eg Yast) if necessary.
+
+
+* Create a symbolic link *llvm-3.5* to *llvm* in the *toolchains* subdir of the ndk *(This is only necessary if you want to be able to build with clang)*
+
+eg
+```
+cd path_to_ndk/toolchains
+ln -s llvm llvm-3.5
+```
+
 ## Usage
 
 * Download and extract the boost source archive to a directory of the form *..../major.minor.patch* 
@@ -31,20 +46,10 @@ Creates binaries for multiple abis (**armeabi-v7a**, **x86**, mips etc).
 boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 ``` 
 
-* Create a symbolic link *llvm-3.5* to *llvm* in the *toolchains* subdir of the ndk *(This is only necessary if you want to be able to build with clang)*
-
-eg
-```
-cd path_to_ndk/toolchains
-ln -s llvm llvm-3.5
-```
-
-* You may need to have *libncurses.so.5* available on you development machine. Install via your os package manager (eg Yast) if necessary.
 
 * Modify the paths (where the ndk is) and variables (which abis you want to build for, which compiler to use etc) in *doIt.sh*, and execute it.
 
 * *__Note__:* If for some reason the build fails you may want to manually clear the */tmp/ndk-your_username* dir (which gets cleared automatically after a successful build).
-
 
 
 
