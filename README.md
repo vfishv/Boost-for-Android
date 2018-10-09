@@ -17,7 +17,7 @@ Creates binaries for multiple abis (**armeabi-v7a**, **arm64-v8a**, **x86**, **x
 *Tested with a development machine running OpenSuse Tumbleweed Linux.*
 
 ## Prebuilt
-You can just download standard (shared, clang/llvm) prebuilt binaries [here](http://silverglint.com/boost-for-android/)  if you don't need to customize the build, or don't have access to a unix like development machine. 
+You can just download standard (shared, clang/llvm) prebuilt binaries [here](http://silverglint.com/boost-for-android/)  if you don't need to customize the build, or don't have access to a unix-like development machine. 
 
 ## Build Yourself
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
