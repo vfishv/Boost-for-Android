@@ -1,25 +1,31 @@
-Build and/or simply download the [Boost C++ Libraries](http://www.boost.org/) for the Android platform, with Google's Ndk.
 
-Tested with **Boost 1.68.0** and **Google's Ndk 17c**  (current versions as of Aug 2018).
+Build and/or simply download the Boost C++ Libraries for the Android platform, with Google's Ndk.
+
+The [Boost C++ Libraries](http://www.boost.org/), are possibly *the* most popular c++ libraries, and it would be nice to be able to use them when developing (native c++ or hybrid java/c++ with Google's [Ndk](https://developer.android.com/ndk/)) apps for Android devices.
+These libraries are cross platform, and available in source code format, and many need to be built before they can be used. Building the libraries for Android, however, can be very difficult and time consuming. This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android, and even providing standard prebuilt binaries to get you started fast.
+
+Tested with **Boost 1.68.0** and **Google's Ndk 18**  (current versions as of Oct 2018).
 
 
 
 Works with **clang** (llvm) 
 *- as of ndk 16 google no longer supports gcc*.
 
-Creates binaries for multiple abis (**armeabi-v7a**, **x86** ...).
+Creates binaries for multiple abis (**armeabi-v7a**, **arm64-v8a**, **x86**, **x86_64**).
 
 
 *Tested with a development machine running OpenSuse Tumbleweed Linux.*
 
 ## Prebuilt
-You can just use the [prebuilt binaries](./prebuilt/) (shared, clang/llvm) if you don't need to customize the build, or don't have access to a unix like development machine. 
+You can just download standard prebuilt binaries [here](http://silverglint.com/boost-for-android/) (shared, clang/llvm) if you don't need to customize the build, or don't have access to a unix like development machine. 
 
 ## Build Yourself
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
   eg */home/declan/Documents/zone/mid/lib/boost/1.68.0*
   
   *__Note__:* After the extarction *..../boost/1.68.0* should then be the direct parent dir of "bootstrap.sh", "boost-build.jam" etc
+  
+  *__Note__:* If you are using ndk 18 you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/issues/82). Currently Boost (1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7.
 
 ```
 > ls /home/declan/Documents/zone/mid/lib/boost/1.68.0
@@ -64,7 +70,7 @@ want to use these. To see which of the libraries do require building you can swi
 > ./bootstrap.sh --show-libraries 
 ```
 
-which for example with boost 1.67 produces the output:
+which for example with boost 1.68 produces the output:
 
 ```
 The Boost libraries requiring separate building and installation are:
