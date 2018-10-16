@@ -5,6 +5,9 @@
 #include <boost/chrono.hpp>
 #include <boost/lexical_cast.hpp>
 
+// when building boost we persisted the NDK version used (BOOST_BUILT_WITH_NDK_VERSION) in this custom header file
+#include <boost/version_ndk.hpp>
+
 
 using std::string;
 
@@ -36,8 +39,10 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
     string Ver_Pat = boost::lexical_cast<string>(ver_pat);
 
     Str += "\n Boost version: " + Ver_Maj + "." + Ver_Min + "." + Ver_Pat + "\n";
+    Str += "... built with NDK version: " + string(BOOST_BUILT_WITH_NDK_VERSION) + "\n";
     Str += "... says time is " + std::string(buffer) + "\n\n";
     //--------------------------------------------
+
 
     return env->NewStringUTF(Str.c_str());;
 
