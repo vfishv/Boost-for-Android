@@ -30,7 +30,7 @@ You can just download a current set of standard (shared, clang/llvm) prebuilt bi
 > ls /home/declan/Documents/zone/mid/lib/boost/1.68.0
 boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 ``` 
-  *__Note__:* If you are using ndk 18 you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/issues/82). Currently Boost (1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7.
+  *__Note__:* If you are using ndk 18 you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/pull/91). Currently Boost (1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7.
 
 * Clone this repo:
 
