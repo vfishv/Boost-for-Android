@@ -4,7 +4,7 @@ Build and/or simply download the Boost C++ Libraries for the Android platform, w
 The [Boost C++ Libraries](http://www.boost.org/), are possibly *the* most popular and generally useful c++ libraries. It would be nice to be able to use them when developing (native c++ or hybrid java/c++ with Google's [Ndk](https://developer.android.com/ndk/)) apps and/or libraries for Android devices.
 The Boost libraries are written to be cross platform, and are available in source code format. However, building the libraries for a given target platform is not a very simple or cross platform experience, at least in practice. Building the Boost libraries for Android can be very difficult and time consuming. This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android (abstracting away all the details of the underlying custom boost build system), and even providing standard prebuilt binaries to get you started fast.
 
-Tested with **Boost 1.68.0** and **Google's Ndk 18**  (current versions as of Oct 2018).
+Tested with **Boost 1.68.0** and **Google's Ndk 18b**  (current versions as of Oct 2018).
 
 
 
@@ -17,7 +17,7 @@ Creates binaries for multiple abis (**armeabi-v7a**, **arm64-v8a**, **x86**, **x
 *Tested with a development machine running OpenSuse Tumbleweed Linux.*
 
 ## Prebuilt
-You can just download standard (shared, clang/llvm) prebuilt binaries [here](http://silverglint.com/boost-for-android/)  if you don't need to customize the build, or don't have access to a unix-like development machine. 
+You can just download a current set of standard (shared, clang/llvm) prebuilt binaries [here](http://silverglint.com/boost-for-android/) (or from an older release [here](https://github.com/dec1/Boost-for-Android/releases)) if you don't need to customize the build, or don't have access to a unix-like development machine. 
 
 ## Build Yourself
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
@@ -56,7 +56,7 @@ boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 
 
 ## Test App 
-Also included is a [test app](./example_app/) which can be opened by Android Studio. If you build and run this app it should show the date and time as calculated by boost *chrono*  (indicating that you have built, linked to and called the boost library correctly).
+Also included is a [test app](./example_app/) which can be opened by Android Studio. If you build and run this app it should show the date and time as calculated by boost *chrono*  (indicating that you have built, linked to and called the boost library correctly), as well as the ndk version used to build the boost library.
 To use the test app make sure to adjust the values in the [local.properties](./example_app/local.properties) file.
 
 *Note:* The test app uses [CMake for Android](https://developer.android.com/ndk/guides/cmake)
