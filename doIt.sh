@@ -17,7 +17,7 @@ BOOST_SRC_DIR=/home/declan/Documents/zone/low/boost_src
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
 #BOOST_VERSION=1.64.0
-BOOST_VERSION=1.68.0
+BOOST_VERSION=1.69.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
@@ -36,7 +36,7 @@ rm $logFile
 
 
 
-# The options --stdlibs, --abis and --linkage can be one or more of the listed posible values. If you specify more than one, then separate individual values by a comma
+# The options --stdlibs, --abis and --linkage can be one or more of the listed possible values. If you specify more than one, then separate individual values by a comma
 #------------------------------------------------------------------------------------------
 # which compiler to use       // gnu-4.9 removed as of ndk 16
 STD_LIBS="llvm"
