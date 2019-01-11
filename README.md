@@ -22,16 +22,16 @@ You can just download a current set of standard (shared, clang/llvm) prebuilt bi
 
 ## Build Yourself
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
-  eg */home/declan/Documents/zone/mid/lib/boost/1.68.0*
+  eg */home/declan/Documents/zone/mid/lib/boost/1.69.0*
   
-  *__Note__:* After the extarction *..../boost/1.68.0* should then be the direct parent dir of "bootstrap.sh", "boost-build.jam" etc
+  *__Note__:* After the extarction *..../boost/1.69.0* should then be the direct parent dir of "bootstrap.sh", "boost-build.jam" etc
 
 
 ```
-> ls /home/declan/Documents/zone/mid/lib/boost/1.68.0
+> ls /home/declan/Documents/zone/mid/lib/boost/1.69.0
 boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 ``` 
-  *__Note__:* If you are using ndk 18 and boost <= 1.68.0, you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/pull/91). Boost (<= 1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7, which it seems to have done in 1.69.0.
+  *__Note__:* If you are using ndk 18 and boost <= 1.69.0, you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/pull/91). Boost (<= 1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7, which it seems to have done in 1.69.0.
 
 * Clone this repo:
 
@@ -71,9 +71,13 @@ want to use these. To see which of the libraries do require building you can swi
 > ./bootstrap.sh --show-libraries 
 ```
 
-which for example with boost 1.68 produces the output:
+which for example with boost 1.69 produces the output:
 
 ```
+The following Boost libraries have portions that require a separate build
+and installation step. Any library not listed here can be used by including
+the headers only.
+
 The Boost libraries requiring separate building and installation are:
     - atomic
     - chrono
@@ -97,7 +101,6 @@ The Boost libraries requiring separate building and installation are:
     - random
     - regex
     - serialization
-    - signals
     - stacktrace
     - system
     - test
