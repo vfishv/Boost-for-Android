@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Declan Moran (www.silverglint.com)
+# Copyright (c) 2019 Declan Moran (www.silverglint.com)
 
 # Extract boost (src) archive to a directory of the form "major.minor.patch" 
 # so that the dir name ~  boost version (eg "1.64.0")
@@ -21,7 +21,6 @@ BOOST_VERSION=1.69.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
-#export ANDROID_NDK_ROOT=/home/declan/Documents/zone/mid/lib/android/ndk/android-ndk-r17c
 export ANDROID_NDK_ROOT=/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle
 
 #------------------------------------------------------------------------------------------
@@ -50,9 +49,8 @@ ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 
 # whether to build shared or static libraries (or both)          
 # possible values:   {shared, static}
-LINKAGE="shared"               
-#LINKAGE="shared, static"
-
+#LINKAGE="shared"               
+LINKAGE="shared,static"
 
 
 #--------------------------------------------------------------------------------------
