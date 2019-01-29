@@ -483,7 +483,8 @@ build_boost_for_abi ()
 
     local ICU_CFLAGS ICU_LDFLAGS
     if [ -n "$ICU_VERSION" ]; then
-        local ICU=$NDK_DIR/sources/icu/$ICU_VERSION
+        #local ICU=$NDK_DIR/sources/icu/$ICU_VERSION
+        local ICU=$ICU_DIR/$ICU_VERSION
         ICU_CFLAGS="-I$ICU/include"
         ICU_LDFLAGS="-L$ICU/libs/$ABI"
     else
