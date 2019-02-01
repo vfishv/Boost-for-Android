@@ -52,13 +52,19 @@ ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #LINKAGE="shared"               
 LINKAGE="shared,static"
 
+# if you need to set additional defines. add them here
+# e.g.
+#DEFINES="__ANDROID_API__=19"
+# it can also be a comma separated list, and need not set a value
+# e.g.
+#DEFINES="__ANDROID_API__=19,MY_SPECIAL_BOOST_DEFINE"
 
 #--------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------
 # Dont modify  - the actual call
 #-------------------------------
 
-./build_tools/build-boost.sh --version=$BOOST_VERSION --stdlibs=$STD_LIBS --abis=$ABIS  --ndk-dir=$ANDROID_NDK_ROOT --linkage=$LINKAGE --verbose $BOOST_SRC_DIR  2>&1 | tee -a $logFile
+./build_tools/build-boost.sh --version=$BOOST_VERSION --stdlibs=$STD_LIBS --abis=$ABIS  --ndk-dir=$ANDROID_NDK_ROOT --linkage=$LINKAGE --defines=$DEFINES --verbose $BOOST_SRC_DIR  2>&1 | tee -a $logFile
 
 
 
