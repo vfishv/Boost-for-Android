@@ -98,6 +98,9 @@ register_var_option "--build-dir=<path>" OPTION_BUILD_DIR "Specify temporary bui
 ABIS="$PREBUILT_ABIS"
 register_var_option "--abis=<list>" ABIS "Specify list of target ABIs"
 
+DEFINES=
+register_var_option "--defines=<list>" DEFINES "Specify list of defines to send b2"
+
 BOOST_VERSION=
 register_var_option "--version=<ver>" BOOST_VERSION "Boost version to build"
 
@@ -675,6 +678,12 @@ EOF
 
     local PREFIX=$BUILDDIR/install
 
+    # build arg list of define="a" define="b=22"
+    DEFINESARGS=""
+    for d in ${DEFINES//,/ }; do
+        DEFINESARGS="$DEFINESARGS define=\"$d\""
+    done
+
     run ./b2 -d+2 -q -j$NUM_JOBS \
         variant=release \
         link=$LIB_LINKAGE \
@@ -689,6 +698,7 @@ EOF
         --layout=system \
         --prefix=$PREFIX \
         --build-dir=$BUILDDIR/build \
+        $DEFINESARGS \
         $WITHOUT \
         install \
 
