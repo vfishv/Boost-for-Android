@@ -21,7 +21,7 @@ BOOST_VERSION=1.69.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
-export ANDROID_NDK_ROOT=/home/declan/Documents/zone/mid/lib/android/sdk/ndk-bundle
+export ANDROID_NDK_ROOT=/home/declan/Documents/zone/mid/lib/android/ndk/android-ndk-r19c
 
 #------------------------------------------------------------------------------------------
 # Modify if desired
