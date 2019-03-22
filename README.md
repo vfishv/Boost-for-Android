@@ -4,7 +4,7 @@ Build and/or simply download the Boost C++ Libraries for the Android platform, w
 The [Boost C++ Libraries](http://www.boost.org/), are possibly *the* most popular and generally useful c++ libraries. It would be nice to be able to use them when developing (native c++ or hybrid java/c++ with Google's [Ndk](https://developer.android.com/ndk/)) apps and/or libraries for Android devices.
 The Boost libraries are written to be cross platform, and are available in source code format. However, building the libraries for a given target platform is not a very simple or cross platform experience, at least in practice. Building the Boost libraries for Android can be very difficult and time consuming. This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android (abstracting away all the details of the underlying custom boost build system), and even providing standard prebuilt binaries to get you started fast.
 
-Tested with **Boost 1.69.0** and **Google's Ndk 19**  (current versions as of Jan 2019).
+Tested with **Boost 1.69.0** and **Google's Ndk 19c**  (current versions as of March 2019).
 
 Building on a Linux machine is officially supported. Mac and Windows should work fine too but the details of setting up the relevant environments (eg. Cygwin or Homebrew) is beyond the scope of what this project tries to do.
 
