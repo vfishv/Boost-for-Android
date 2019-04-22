@@ -2,7 +2,7 @@
 
 # Dockerfile for building boost for android
 # https://github.com/dec1/Boost-for-Android
-# creates linux installation with all tools, libraries and sources required.
+# creates docker container with all tools, libraries and sources required to build boost for android.
 
 # Author: Declan Moran
 # www.silverglint.com
@@ -22,14 +22,14 @@
 # Now inside docker container
 # $ cd /home/docker-share/boost-for-android
 #
-# Modify doIt.sh, to match the boost and android ndk versions/paths in the "Configure here"
+# Modify ./doIt.sh (on host), to match the boost and android ndk versions/paths in the "Configure here" section below
 # Build from running docker container. 
 # $./doIt.sh
 #
 # Exit container, when build is finsihed,
 # $ exit
 #
-# "./build" dir contains required built, but owned by root. chown to your username/group
+# "./build" dir contains required build, but owned by root. chown to your username/group
 # > sudo chown -R <username>:<group> ./build
 # 
 # Note: If you want to edit the boost source you can download it to this host dir and set doIt.sh to use this instead of the boost version downloaded by the image
