@@ -6,9 +6,9 @@ The Boost libraries are written to be cross platform, and are available in sourc
 
 Tested with **Boost 1.69.0** and **Google's Ndk 19c**  (current versions as of March 2019).
 
-Building on a Linux machine is officially supported. Mac and Windows should work fine too but the details of setting up the relevant environments (eg. Cygwin or Homebrew) is beyond the scope of what this project tries to do.
+Building on a Linux/Docker machine is officially supported. Mac and Windows should work fine too but the details of setting up the relevant environments (eg. Cygwin or Homebrew) is beyond the scope of what this project tries to do.
 
-If you want to use an operating system other than Linux when building, the easiest option is to use virtual machines. On your OS of choice install VirtualBox, and with it create a Linux virtual machine with where you do the building. No matter what OS you use to build with, the resulting binaries can then be copied to any other, and used from then on as if you had built on there to start with (theyre cross compiled *for* android and have no memory of *where* they were built).
+If you want to use an operating system other than Linux/Docker when building, the easiest option is to use virtual machines. On your OS of choice install VirtualBox, and with it create a Linux virtual machine with where you do the building. No matter what OS you use to build with, the resulting binaries can then be copied to any other, and used from then on as if you had built on there to start with (theyre cross compiled *for* android and have no memory of *where* they were built).
 
 Works with **clang** (llvm) 
 *- as of ndk 16 google no longer supports gcc*.
@@ -16,13 +16,19 @@ Works with **clang** (llvm)
 Creates binaries for multiple abis (**armeabi-v7a**, **arm64-v8a**, **x86**, **x86_64**).
 
 
-*Tested with a development machine running OpenSuse Tumbleweed Linux.*
+*Tested with a development machine running Ubuntu 18.04.*
 
 ## Prebuilt
 You can just download a current set of standard prebuilt binaries [here](https://github.com/dec1/Boost-for-Android/releases) if you don't need to customize the build, or don't have access to a unix-like development machine. 
 <!--- [here](http://silverglint.com/boost-for-android/) --->
 
 ## Build Yourself
+
+### Docker
+The easiest way to build is to use the [Dockerflile](./docker/Dockerfile). This way you need not download or inatall anything on your host machine (except itself). See the top of the Dockerfile for instructions.
+
+### Build on you linux host
+* For prerequisites see [Dockerflile](./docker/Dockerfile) (even though this build option does not use docker)
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
   eg */home/declan/Documents/zone/mid/lib/boost/1.69.0*
   
@@ -33,7 +39,6 @@ You can just download a current set of standard prebuilt binaries [here](https:/
 > ls /home/declan/Documents/zone/mid/lib/boost/1.69.0
 boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 ``` 
-  *__Note__:* If you are using ndk 18 and boost <= 1.69.0, you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/pull/91). Boost (<= 1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7, which it seems to have done in 1.69.0.
 
 * Clone this repo:
 
@@ -49,12 +54,13 @@ boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 > ./doIt.sh
 ```
 
-* You may need to have *libncurses.so.5* available on you development machine. Install via your os package manager (eg Yast) if necessary.
-
 
 
 * *__Note__:* If for some reason the build fails you may want to manually clear the */tmp/ndk-your_username* dir (which gets cleared automatically after a successful build).
 
+  *__Issues__:* 
+  - If you are using ndk 18 and boost <= 1.68.0, you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/pull/91). Boost (<= 1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7, which it seems to have done in 1.69.0.
+  - There seems to be a bug in boost 1.70.0. Workaround here: https://github.com/boostorg/boost/issues/258
 
 
 
