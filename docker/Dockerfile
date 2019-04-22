@@ -11,7 +11,7 @@
 # Usage: 
 #------
 # > git clone https://github.com/dec1/boost-for-android
-# > cd Boost-for-Android
+# > cd boost-for-android
 #
 # build docker image "my_img_droid" from the dockerfile in "docker" dir
 # > docker build -t my_img_droid ./docker
