@@ -33,7 +33,7 @@
 # > sudo chown -R <username>:<group> ./build
 # 
 # Note: If you want to edit the boost source you can download it to this host dir and set doIt.sh to use this instead of the boost version downloaded by the image
-# This is necessary for boost version 1.70.0, which seems to contain a bug. Workaround here: https://github.com/boostorg/boost/issues/258
+# This is necessary for boost version 1.70.0, which seems to contain a bug. Workaround here: https://github.com/boostorg/build/issues/385
 
 
 
