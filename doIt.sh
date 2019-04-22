@@ -43,14 +43,14 @@ STD_LIBS="llvm"
 
 # which abis (~ architecture + instruction set) to build for     
 # possible values:  {armeabi-v7a,arm64-v8a,x86,x86_64}
-ABIS="armeabi-v7a"
-#ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
+#ABIS="armeabi-v7a"
+ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #ABIS="x86_64"
 
 # whether to build shared or static libraries (or both)          
 # possible values:   {shared, static}
-LINKAGE="shared"               
-#LINKAGE="shared,static"
+# LINKAGE="shared"               
+LINKAGE="shared,static"
 
 
 #--------------------------------------------------------------------------------------
