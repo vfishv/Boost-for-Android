@@ -25,7 +25,7 @@ You can just download a current set of standard prebuilt binaries [here](https:/
 ## Build Yourself
 
 ### Docker
-The easiest way to build is to use [docker](https://www.docker.com) with the [Dokckerflile](./docker/Dockerfile) provided. This way you need not download or install anything (including android studio, ndk, boost source code ) on your host machine (except docker itself). See the top of the Dockerfile for instructions.
+The easiest way to build is to use [docker](https://www.docker.com) with the [Dockerflile](./docker/Dockerfile) provided. This way you need not download or install anything (including android studio, ndk, boost source code ) on your host machine (except docker itself). See the top of the Dockerfile for instructions.
 
 ### Build on you linux host
 * For prerequisites  also see the [Dockerflile](./docker/Dockerfile) (even though the rest of these instructions don't use docker)
