@@ -16,13 +16,18 @@
 # build docker image "my_img_droid" from the dockerfile in "docker" dir
 # > docker build -t my_img_droid ./docker
 #
-# run docker container "my_ctr_droid" from this image, mounting the current dir.
-# > docker run  -v .:/home/docker-share -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
+# run docker container "my_ctr_droid" from this image, mounting the current dir. (Need to pass absolute host paths to mount volume- hence "pwd")
+# > docker run  -v $(pwd):/home/docker-share/boost-for-android -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
+#
+# Now inside docker container
+# $ cd /home/docker-share/boost-for-android
 #
 # Modify doIt.sh, to match the boost and android ndk versions/paths in the "Configure here"
-#
 # Build from running docker container. 
-# >./doIt.sh
+# $./doIt.sh
+#
+# Exit container, when build is finsihed,
+# $ exit
 #
 # "./build" dir contains required built, but owned by root. chown to your username/group
 # > sudo chown -R <username>:<group> ./build

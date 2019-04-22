@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Declan Moran (www.silverglint.com)
 
 # Extract boost (src) archive to a directory of the form "major.minor.patch" 
-# so that the dir name ~  boost version (eg "1.64.0")
+# so that the dir name ~  boost version (eg "1.69.0")
 #---------------------------------------------------------------------------------
 # Example script. Modify the variables below as appropriate for your local setup.
 #---------------------------------------------------------------------------------
@@ -12,7 +12,7 @@
 
 # Specify the path to boost source code dir 
 #BOOST_SRC_DIR=/home/declan/Documents/zone/low/Boost-for-Android/src
-BOOST_SRC_DIR=/home/declan/Documents/zone/low/boost_src
+BOOST_SRC_DIR=/home/docker-share/boost-src
 
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
@@ -21,7 +21,7 @@ BOOST_VERSION=1.69.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
-export ANDROID_NDK_ROOT=/home/declan/Documents/zone/mid/lib/android/ndk/android-ndk-r19c
+export ANDROID_NDK_ROOT=/home/android/android-ndk-r19c
 
 #------------------------------------------------------------------------------------------
 # Modify if desired
@@ -43,14 +43,14 @@ STD_LIBS="llvm"
 
 # which abis (~ architecture + instruction set) to build for     
 # possible values:  {armeabi-v7a,arm64-v8a,x86,x86_64}
-#ABIS="armeabi-v7a"
-ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
+ABIS="armeabi-v7a"
+#ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #ABIS="x86_64"
 
 # whether to build shared or static libraries (or both)          
 # possible values:   {shared, static}
-#LINKAGE="shared"               
-LINKAGE="shared,static"
+LINKAGE="shared"               
+#LINKAGE="shared,static"
 
 
 #--------------------------------------------------------------------------------------
