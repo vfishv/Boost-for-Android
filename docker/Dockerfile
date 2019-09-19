@@ -35,7 +35,7 @@
         #   -t my_img_droid ./docker
                 
                 
-                # Note : IN order for docker to access network when host is behind a proxy ~/.docker/config.json should contain the relevant proxy settings:
+                # Note : In order for docker to access network when host is behind a proxy ~/.docker/config.json should contain the relevant proxy settings. eg
                 # 
                 # {....
                 # 	"proxies": {
@@ -80,9 +80,28 @@
     # $ cd /home/docker-share/boost-for-android
     #
     # Modify ./doIt.sh (on host), to match the boost and android ndk versions/paths in the "Configure here" section below
-    # Build from running docker container. 
+    # Build boost from running docker container. 
     # $./doIt.sh
     #
+    
+        
+        # # backup current local.properties
+        # ARG LOC_PROPS_FILE=${APP_DIR}/local.properties
+        # ARG LOC_PROPS_FILE_OLD=${LOC_PROPS_FILE}_old
+        # 
+        # RUN if [ -f $LOC_PROPS_FILE_OLD ]; then rm -f $LOC_PROPS_FILE_OLD; fi
+        # RUN mv $LOC_PROPS_FILE $LOC_PROPS_FILE_OLD
+        # 
+        # 
+        # 
+        # RUN echo "sdk.dir=$SDK_DIR"         >> $LOC_PROPS_FILE
+        # RUN echo "ndk.dir=$NDK_DIR"         >> $LOC_PROPS_FILE
+    # RUN echo "boost.dir=$BOOST_SRC_DIR" >> $LOC_PROPS_FILE
+
+
+    # build exmple_app
+    # $ example_app/gradlew assembleDebug
+    
     # Exit container, when build is finsihed,
     # $ exit
     #
@@ -106,14 +125,12 @@ FROM amd64/ubuntu:18.04
 # ---------------------------------------------------------------------
 # Here you can speciofy exactly what boost, android ndk (and sdk) version you want to use.
 
-ARG ANDROID_HOME=/home/android
+
 # (1) BOOST
 ARG BOOST_FILE_BASE=boost_1_69_0
 ARG BOOST_VER=1.69.0
 ARG BOOST_URL_BASE=https://dl.bintray.com/boostorg/release
 
-# this is where the boost for android repo is mounted/shared to ... TODO remove
-#ARG BOOST_FOR_ANDROID_PATH=/home/docker-share/boost-for-android
 
 # this is where boost src will be extracted to
 ARG BOOST_SRC_DIR_BASE=/home/docker-share/boost-src  
@@ -151,9 +168,6 @@ ARG PROXY_HTTP_PORT=""
 ARG PROXY_HTTPS_HOST=""
 ARG PROXY_HTTPS_PORT=""
 
-
-# leave blank if not behind proxy ie
-# ARG PROXY_CONFIG_STR=
 
 # ---------------------------------------------------------------------
 ## --------------------------------------------------------------------
@@ -220,10 +234,6 @@ RUN unzip $NDK_FILE
 # BOOST
 #------
 
-# this is where the boost for android repo is cloned to
-# WORKDIR $BOOST_FOR_ANDROID_PATH
-
-
 ARG BOOST_FILE=${BOOST_FILE_BASE}.tar.gz
 ARG BOOST_SRC_DIR=${BOOST_SRC_DIR_BASE}/$BOOST_VER  
 
@@ -237,7 +247,7 @@ RUN tar xvzf $BOOST_FILE -C $BOOST_SRC_DIR --strip-components 1
 RUN echo $BOOST_SRC_DIR
 
 # -------------------------------------------
-#build example app
+#build example_app
 
 ARG APP_DIR=./example_app
 ARG SDK_DIR=$ANDROID_HOME
@@ -245,30 +255,24 @@ ARG NDK_FILE_BASE=android-ndk-r19c
 ARG NDK_DIR=${SDK_DIR}/$NDK_FILE_BASE
 
 
-# # backup current local.properties
-# ARG LOC_PROPS_FILE=${APP_DIR}/local.properties
-# ARG LOC_PROPS_FILE_OLD=${LOC_PROPS_FILE}_old
-# 
-# RUN if [ -f $LOC_PROPS_FILE_OLD ]; then rm -f $LOC_PROPS_FILE_OLD; fi
-# RUN mv $LOC_PROPS_FILE $LOC_PROPS_FILE_OLD
-# 
-# 
-# 
-# RUN echo "sdk.dir=$SDK_DIR"         >> $LOC_PROPS_FILE
-# RUN echo "ndk.dir=$NDK_DIR"         >> $LOC_PROPS_FILE
-# RUN echo "boost.dir=$BOOST_SRC_DIR" >> $LOC_PROPS_FILE
-
-
-
-
-WORKDIR $APP_DIR
-
 # Gradle needs to know how to deal with any proxy
-RUN [ -z "$PROXY_HTTP_HOST" ]   && echo "systemProp.http.proxyHost="$PROXY_HTTP_HOST    >> ~/gradle.properties
-RUN [ -z "$PROXY_HTTP_PORT" ]   && echo "systemProp.http.proxyPort="$PROXY_HTTP_PORT    >> ~/gradle.properties
+RUN if [ ! -z "$PROXY_HTTP_HOST" ] ;\
+        then echo "systemProp.http.proxyHost="$PROXY_HTTP_HOST    >> ~/gradle.properties ;\
+    fi ;\
+     
+RUN if [ ! -z "$PROXY_HTTP_PORT" ] ;\
+        then echo "systemProp.http.proxyPort="$PROXY_HTTP_PORT    >> ~/gradle.properties ;\
+    fi ;\
+     
+     
+RUN if [ ! -z "$PROXY_HTTPS_HOST" ] ;\
+        then echo "systemProp.https.proxyHost="$PROXY_HTTPS_HOST    >> ~/gradle.properties ;\
+    fi ;\
+     
+RUN if [ ! -z "$PROXY_HTTPS_PORT" ] ;\
+        then echo "systemProp.https.proxyPort="$PROXY_HTTPS_PORT    >> ~/gradle.properties ;\
+    fi ;\
+     
+    
 
-RUN [ -z "$PROXY_HTTPS_HOST" ]  && echo "systemProp.https.proxyHost="$PROXY_HTTPS_HOST  >> ~/gradle.properties
-RUN [ -z "$PROXY_HTTPS_PORT" ]  && echo "systemProp.https.proxyPort="$PROXY_HTTPS_PORT  >> ~/gradle.properties
-
-RUN ./gradlew assembleDebug
 
