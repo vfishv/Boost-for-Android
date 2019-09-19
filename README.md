@@ -27,6 +27,19 @@ You can just download a current set of standard prebuilt binaries [here](https:/
 ### Docker
 The easiest way to build is to use [docker](https://www.docker.com) with the [Dockerflile](./docker/Dockerfile) provided. This way you need not download or install anything (including android studio, ndk, boost source code ) on your host machine (except docker itself). See the top of the Dockerfile for instructions.
 
+Note : IN order for docker to access network when host is behind a proxy ~/.docker/config.json should contain the relevant proxy settings:
+```
+{....
+	"proxies": {
+		"default": {
+			"httpProxy": "http://10.110.15.6:8080",
+			"httpsProxy": "https://10.110.15.6:8080",
+			"noProxy": "localhost,127.0.0.1"
+		}
+	}
+}
+
+```
 ### Build on you linux host
 * For prerequisites  also see the [Dockerflile](./docker/Dockerfile) (even though the rest of these instructions don't use docker)
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
