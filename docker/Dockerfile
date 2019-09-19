@@ -85,23 +85,6 @@
     #
     
         
-        # # backup current local.properties
-        # ARG LOC_PROPS_FILE=${APP_DIR}/local.properties
-        # ARG LOC_PROPS_FILE_OLD=${LOC_PROPS_FILE}_old
-        # 
-        # RUN if [ -f $LOC_PROPS_FILE_OLD ]; then rm -f $LOC_PROPS_FILE_OLD; fi
-        # RUN mv $LOC_PROPS_FILE $LOC_PROPS_FILE_OLD
-        # 
-        # 
-        # 
-        # RUN echo "sdk.dir=$SDK_DIR"         >> $LOC_PROPS_FILE
-        # RUN echo "ndk.dir=$NDK_DIR"         >> $LOC_PROPS_FILE
-    # RUN echo "boost.dir=$BOOST_SRC_DIR" >> $LOC_PROPS_FILE
-
-
-    # build exmple_app
-    # $ example_app/gradlew assembleDebug
-    
     # Exit container, when build is finsihed,
     # $ exit
     #
@@ -258,20 +241,20 @@ ARG NDK_DIR=${SDK_DIR}/$NDK_FILE_BASE
 # Gradle needs to know how to deal with any proxy
 RUN if [ ! -z "$PROXY_HTTP_HOST" ] ;\
         then echo "systemProp.http.proxyHost="$PROXY_HTTP_HOST    >> ~/gradle.properties ;\
-    fi ;\
+    fi 
      
 RUN if [ ! -z "$PROXY_HTTP_PORT" ] ;\
         then echo "systemProp.http.proxyPort="$PROXY_HTTP_PORT    >> ~/gradle.properties ;\
-    fi ;\
+    fi 
      
      
 RUN if [ ! -z "$PROXY_HTTPS_HOST" ] ;\
         then echo "systemProp.https.proxyHost="$PROXY_HTTPS_HOST    >> ~/gradle.properties ;\
-    fi ;\
+    fi 
      
 RUN if [ ! -z "$PROXY_HTTPS_PORT" ] ;\
         then echo "systemProp.https.proxyPort="$PROXY_HTTPS_PORT    >> ~/gradle.properties ;\
-    fi ;\
+    fi 
      
     
 

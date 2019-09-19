@@ -55,11 +55,35 @@ LINKAGE="shared,static"
 
 #--------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------
-# Dont modify  - the actual call
-#-------------------------------
+# Build Boost  (the actual call) - dont modify
+#---------------------------------------------
 
 ./build_tools/build-boost.sh --version=$BOOST_VERSION --stdlibs=$STD_LIBS --abis=$ABIS  --ndk-dir=$ANDROID_NDK_ROOT --linkage=$LINKAGE --verbose $BOOST_SRC_DIR  2>&1 | tee -a $logFile
 
 
 
+#--------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------
+# Build example app (the actual call) - dont modify
+#  (could alternately do this from android studio)
+#--------------------------------------------------
+
+    cd example_app
+    # adapt local.properties
+    # ----------------------
+    
+    PROPS_FILE=local.properties
+    LOC_PROPS_FILE_OLD=${LOC_PROPS_FILE}_old
+
+    if [ -f $LOC_PROPS_FILE_OLD ]; then rm -f $LOC_PROPS_FILE_OLD; fi
+    mv $LOC_PROPS_FILE $LOC_PROPS_FILE_OLD
+
+    echo "sdk.dir="/home/android                 >> $LOC_PROPS_FILE
+    echo "ndk.dir="$ANDROID_NDK_ROOT             >> $LOC_PROPS_FILE
+    echo "boost.dir="build/boost/$BOOST_VERSION  >> $LOC_PROPS_FILE
+
+
+    # build
+    #-------
+    ./gradlew assembleDebug
 
