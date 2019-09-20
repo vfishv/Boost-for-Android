@@ -58,10 +58,15 @@
         # --build-arg ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
         
 
-
+    # (3) Download boost src and ndk to current dir (so can share with docker container .. see below)
+    #-------------------------------
+    # eg 
+    #   ./down/boost_src/1.69.0 
+    #   ./down/ndk/19c
+    
     # (2) Run Container
     #-------------------
-    # run docker container "my_ctr_droid" from this image, mounting the current dir as /home/Bfa, and reading env vars from ./docker/env.txt (modify as appropriate)
+    # run docker container "my_ctr_droid" from this image, mounting the current dir as /home/bfa (thus also boost src and ndk), 
     # (Need to pass absolute host paths to mount volume- hence "pwd")
     # 
     # > docker run -v $(pwd):/home/bfa -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
@@ -90,8 +95,7 @@
 
 
 
-# Note: If you want to edit the boost source you can download it to this host dir and set doIt.sh to use this instead of the boost version downloaded by the image
-# This is necessary for boost version 1.70.0, which seems to contain a bug. Workaround here: https://github.com/boostorg/build/issues/385
+
 
 
 
