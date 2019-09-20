@@ -64,7 +64,10 @@
     # run docker container "my_ctr_droid" from this image, mounting the current dir as /home/Bfa, and reading env vars from ./docker/env.txt (modify as appropriate)
     # (Need to pass absolute host paths to mount volume- hence "pwd")
     # 
-    # > docker run  --env-file=./docker/env.txt -v $(pwd):/home/bfa -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
+    # > docker run -v $(pwd):/home/bfa -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
+    
+    # If anything goes wrong you can inspect the log file. eg
+    # docker cp my_ctr_droid:/tmp/ndk-/tmp/build-14/build-boost/armeabi-v7a/llvm/src/bootstrap.log ./bootstrap.log
     #
 
     # (3) Build boosta and app inside container
