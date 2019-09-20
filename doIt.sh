@@ -12,7 +12,8 @@
 
 # Specify the path to boost source code dir 
 #BOOST_SRC_DIR=/home/declan/Documents/zone/low/Boost-for-Android/src
-BOOST_SRC_DIR=/home/docker-share/boost-src
+#BOOST_SRC_DIR=/home/docker-share/boost-src
+BOOST_SRC_DIR=/home/bfa/down/boost_src
 
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
@@ -21,7 +22,8 @@ BOOST_VERSION=1.69.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
-export ANDROID_NDK_ROOT=/home/android/android-ndk-r19c
+#export ANDROID_NDK_ROOT=/home/android/android-ndk-r19c
+export ANDROID_NDK_ROOT=/home/bfa/down/ndk/19c
 
 #------------------------------------------------------------------------------------------
 # Modify if desired
@@ -43,14 +45,14 @@ STD_LIBS="llvm"
 
 # which abis (~ architecture + instruction set) to build for     
 # possible values:  {armeabi-v7a,arm64-v8a,x86,x86_64}
-#ABIS="armeabi-v7a"
-ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
+ABIS="armeabi-v7a"
+#ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #ABIS="x86_64"
 
 # whether to build shared or static libraries (or both)          
 # possible values:   {shared, static}
-# LINKAGE="shared"               
-LINKAGE="shared,static"
+ LINKAGE="shared"               
+#LINKAGE="shared,static"
 
 
 #--------------------------------------------------------------------------------------
@@ -67,23 +69,24 @@ LINKAGE="shared,static"
 # Build example app (the actual call) - dont modify
 #  (could alternately do this from android studio)
 #--------------------------------------------------
-
-    cd example_app
-    # adapt local.properties
-    # ----------------------
-    
-    PROPS_FILE=local.properties
-    LOC_PROPS_FILE_OLD=${LOC_PROPS_FILE}_old
-
-    if [ -f $LOC_PROPS_FILE_OLD ]; then rm -f $LOC_PROPS_FILE_OLD; fi
-    mv $LOC_PROPS_FILE $LOC_PROPS_FILE_OLD
-
-    echo "sdk.dir="/home/android                 >> $LOC_PROPS_FILE
-    echo "ndk.dir="$ANDROID_NDK_ROOT             >> $LOC_PROPS_FILE
-    echo "boost.dir="build/boost/$BOOST_VERSION  >> $LOC_PROPS_FILE
-
-
-    # build
-    #-------
-    ./gradlew assembleDebug
+# 
+#     cd example_app
+#     # adapt local.properties. ndk.dir, booost.dir should match above. sdk.dir should match dockerfile
+#     # ----------------------
+#     
+#     PROPS_FILE=local.properties
+#     LOC_PROPS_FILE_OLD=${LOC_PROPS_FILE}_old
+# 
+#     if [ -f $LOC_PROPS_FILE_OLD ]; then rm -f $LOC_PROPS_FILE_OLD; fi
+#     mv $LOC_PROPS_FILE $LOC_PROPS_FILE_OLD
+# 
+#     echo "sdk.dir="/home/android                   >> $LOC_PROPS_FILE
+#     echo "ndk.dir="$ANDROID_NDK_ROOT               >> $LOC_PROPS_FILE
+#     echo "boost.dir=/home/bfa/build/boost/$BOOST_VERSION  >> $LOC_PROPS_FILE
+# 
+# 
+#     # build
+#     #-------
+#     cd example_app
+#     ./gradlew assembleDebug
 

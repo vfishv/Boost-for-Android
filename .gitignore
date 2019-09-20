@@ -4,3 +4,6 @@
 /build_out.txt
 /src/
 /prebuilt/
+/down/
+
+/.gradle/

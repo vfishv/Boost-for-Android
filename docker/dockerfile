@@ -1,4 +1,4 @@
-# Version: 1.1
+# Version: 1.2
 
 # Dockerfile for building boost for android
 # https://github.com/dec1/Boost-for-Android
@@ -25,6 +25,7 @@
         # eg 
         # 
         
+        
         # Proxy (of host)
         # -----
         # > docker build  \
@@ -47,16 +48,6 @@
                 # 	}
                 # }
 
-        # Ndk version
-        # the ndk version (from eg https://dl.google.com/android/repository/android-ndk-r19c-linux-x86_64.zip)
-        # https://developer.android.com/ndk/downloads
-        # --build-arg NDK_FILE_BASE=android-ndk-r19c
-        
-        # Boost version 
-        # (eg from https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz)
-        # https://www.boost.org/users/download/
-        # --build-arg BOOST_VER=1.69.0
-
         # Sdk version
         # the file path for the sdk tools download (from eg https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip)
         # --build-arg SDK_FILE=sdk-tools-linux-4333796.zip
@@ -65,19 +56,21 @@
         # the sdk plaform to use - should match that used in example_app (app/build.gradle)
         # https://developer.android.com/guide/topics/manifest/uses-sdk-element
         # --build-arg ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
-
+        
 
 
     # (2) Run Container
     #-------------------
-    # run docker container "my_ctr_droid" from this image, mounting the current dir. (Need to pass absolute host paths to mount volume- hence "pwd")
-    # > docker run  -v $(pwd):/home/docker-share/boost-for-android -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
+    # run docker container "my_ctr_droid" from this image, mounting the current dir as /home/Bfa, and reading env vars from ./docker/env.txt (modify as appropriate)
+    # (Need to pass absolute host paths to mount volume- hence "pwd")
+    # 
+    # > docker run  --env-file=./docker/env.txt -v $(pwd):/home/bfa -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
     #
 
     # (3) Build boosta and app inside container
     # ----------------------------------------
     # Now inside docker container
-    # $ cd /home/docker-share/boost-for-android
+    # $ cd /home/bfa
     #
     # Modify ./doIt.sh (on host), to match the boost and android ndk versions/paths in the "Configure here" section below
     # Build boost from running docker container. 
@@ -109,41 +102,17 @@ FROM amd64/ubuntu:18.04
 # Here you can speciofy exactly what boost, android ndk (and sdk) version you want to use.
 
 
-# (1) BOOST
-ARG BOOST_FILE_BASE=boost_1_69_0
-ARG BOOST_VER=1.69.0
-ARG BOOST_URL_BASE=https://dl.bintray.com/boostorg/release
+# (1) Boost Src
+ARG BOOST_SRC_DIR=Boost-For-Android/boost_src/1.69.0
 
 
-# this is where boost src will be extracted to
-ARG BOOST_SRC_DIR_BASE=/home/docker-share/boost-src  
+# (2) Android Ndk
+ARG NDK_DIR=/home/android/ndk
 
 
-
-
-# (2) Android
-# base path for sdk and ndk
-ARG ANDROID_HOME=/home/android
-
-# Sdk
-# https://developer.android.com/studio#downloads
-ARG SDK_URL_BASE=https://dl.google.com/android/repository
-ARG SDK_FILE=sdk-tools-linux-4333796.zip
-# sdk will be instalkled to $ANDROID_HOME
-
-
-ARG ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
-
-
-
-# (3) Android NDK
-ARG NDK_URL_BASE=https://dl.google.com/android/repository
-ARG NDK_FILE_BASE=android-ndk-r19c
-ARG NDK_FILE=${NDK_FILE_BASE}-linux-x86_64.zip
-
-# (4) Proxy
+# (3) Proxy
 # ---------
-# Any proxy settings (necessary if host is behind a proxy) for sdk_manager and gradle
+# Any proxy settings (necessary if host is behind a proxy) for sdk_manager and gradle.
 # Note : Aditionally ~/.docker/config.json on host must have relevant proxy settings, for a containre to access network
 
 ARG PROXY_HTTP_HOST=""
@@ -152,8 +121,22 @@ ARG PROXY_HTTPS_HOST=""
 ARG PROXY_HTTPS_PORT=""
 
 
+#--------------------------------------------------
+# Sdk
+
+ARG ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
+
+# base path for sdk
+ARG ANDROID_HOME=/home/android
+
+# https://developer.android.com/studio#downloads
+ARG SDK_URL_BASE=https://dl.google.com/android/repository
+ARG SDK_FILE=sdk-tools-linux-4333796.zip
+# sdk will be instalkled to $ANDROID_HOME
+
+
 # ---------------------------------------------------------------------
-## --------------------------------------------------------------------
+# --------------------------------------------------------------------
 
 RUN apt-get update
 RUN apt-get -y dist-upgrade
@@ -208,34 +191,10 @@ RUN  if [ ! -z "$PROXY_HTTP_HOST" ] ;\
 
 
 
-# NDK
-# ----
-RUN wget ${NDK_URL_BASE}/$NDK_FILE
-RUN unzip $NDK_FILE 
-
-
-# BOOST
-#------
-
-ARG BOOST_FILE=${BOOST_FILE_BASE}.tar.gz
-ARG BOOST_SRC_DIR=${BOOST_SRC_DIR_BASE}/$BOOST_VER  
-
-RUN wget ${BOOST_URL_BASE}/${BOOST_VER}/source/$BOOST_FILE
-RUN mkdir -p $BOOST_SRC_DIR
-
-
-RUN tar xvzf $BOOST_FILE -C $BOOST_SRC_DIR --strip-components 1
- # tar xvzf /home/android/boost_1_70_0.tar.gz -C /home/docker-share/boost/src/1.70.0 --strip-components 1
-
-RUN echo $BOOST_SRC_DIR
 
 # -------------------------------------------
-#build example_app
+# enable gradle to get through proxy (when building example_app)
 
-ARG APP_DIR=./example_app
-ARG SDK_DIR=$ANDROID_HOME
-ARG NDK_FILE_BASE=android-ndk-r19c
-ARG NDK_DIR=${SDK_DIR}/$NDK_FILE_BASE
 
 
 # Gradle needs to know how to deal with any proxy
