@@ -58,6 +58,8 @@
 # or implied, of CrystaX.
 
 # include common function and variable definitions
+
+export TMPDIR=$(cd `dirname $0` && pwd)/../build_tmp
 . `dirname $0`/prebuilt-common.sh
 
 PROGRAM_PARAMETERS="<src-dir>"
@@ -123,6 +125,7 @@ register_var_option "--stdlibs=<list>" STDLIBS "List of Standard C++ Library imp
 register_jobs_option
 
 extract_parameters "$@"
+
 
 
 
@@ -436,7 +439,8 @@ build_boost_for_abi ()
         PATH=$TMPHOSTTCDIR:$SAVED_PATH
         export PATH
 
-        run ./bootstrap.sh --with-toolset=cc
+        #run ./bootstrap.sh --with-toolset=cc
+        run ./bootstrap.sh --with-toolset=gcc
         fail_panic "Could not bootstrap Boost build"
     fi
 
