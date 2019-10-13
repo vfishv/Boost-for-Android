@@ -17,11 +17,11 @@ PREFIX_DIR=${BUILD_DIR}/install
 
 export NDK_DIR=/home/declan/zone/low/Boost-for-Android/down/ndk/20
 
-ARCHLIST="arm64-v8a" 
-#ARCHLIST="arm64-v8a armeabi-v7a x86 x86_64"
+#ARCHLIST="arm64-v8a" 
+ARCHLIST="arm64-v8a armeabi-v7a x86 x86_64"
 
-LINKAGE_LIST="shared"
-#LINKAGE_LIST="shared static" # can be "shared" or "static" or "shared static" (both)
+#LINKAGE_LIST="shared"
+LINKAGE_LIST="shared static" # can be "shared" or "static" or "shared static" (both)
 
 WITHOUT_LIBRARIES=--without-python
 
@@ -49,6 +49,27 @@ toolset_for_arch() {
     
 }
 
+#----------------------------------------------------------------------------------
+# map abi to pass to b2 .. omplains 
+abi_for_arch() {
+
+
+    local arch=$1
+    
+    case "$arch" in
+        arm64-v8a)      echo "aapcs"
+        ;;
+        armeabi-v7a)    echo "aapcs"
+        ;;
+        x86)            echo "sysv"
+        ;;
+        x86_64)         echo "sysv"
+        ;;
+        
+    esac
+    
+}
+
 #-----------------------------------------
 USER_CONFIG_FILE=$(pwd)/user-config.jam
 echo "USER_CONFIG_FILE = " $USER_CONFIG_FILE
@@ -66,8 +87,7 @@ then
   # Make the initial bootstrap
   echo "Performing boost bootstrap"
 
-    touch ${BUILD_DIR}/bootstrap.log
-  ./bootstrap.sh 2>&1 | tee -a ${BUILD_DIR}/bootstrap.log
+  ./bootstrap.sh # 2>&1 | tee -a bootstrap.log
 fi
   
 #-------------------------------------------  
@@ -88,13 +108,16 @@ for LINKAGE in $LINKAGE_LIST; do
     for ARCH in $ARCHLIST; do
     
         toolset_name="$(toolset_for_arch $ARCH)"
+        abi_name="$(abi_for_arch $ARCH)"
 
         {
+             #abi=aapcs address-model=32 architecture=arm binary-format=elf threading=multi toolset=clang \
             ./b2 -q                         \
+                abi=$abi_name    \
+                toolset=clang-$toolset_name     \
                 --ignore-site-config         \
                 -j$num_cores                      \
                 target-os=android           \
-                toolset=clang-$toolset_name     \
                 --user-config=$USER_CONFIG_FILE \
                 link=$LINKAGE                  \
                 threading=multi              \
