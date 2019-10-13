@@ -1,4 +1,10 @@
 
+# see here for info on "new paths for toolchains":
+# https://developer.android.com/ndk/guides/other_build_systems
+
+# also useful ndk details:s 
+# https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md
+
 
 
 BOOST_DIR="boost_1_70_0"
