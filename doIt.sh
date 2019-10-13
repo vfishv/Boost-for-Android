@@ -17,7 +17,7 @@ BOOST_SRC_DIR=/home/bfa/down/boost_src
 
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
-#BOOST_VERSION=1.64.0
+#BOOST_VERSION=1.69.0
 BOOST_VERSION=1.69.0
 
 #------------------------------------------------------------------------------------------
@@ -25,6 +25,11 @@ BOOST_VERSION=1.69.0
 #export ANDROID_NDK_ROOT=/home/android/android-ndk-r19c
 export ANDROID_NDK_ROOT=/home/bfa/down/ndk/19c
 
+# see here for info on "new paths for toolchains":
+# https://developer.android.com/ndk/guides/other_build_systems
+
+# also useful ndk details:s 
+# https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md
 #------------------------------------------------------------------------------------------
 # Modify if desired
 # log file where build messages will be stored
@@ -62,8 +67,45 @@ ABIS="armeabi-v7a"
 
 ./build_tools/build-boost.sh --version=$BOOST_VERSION --stdlibs=$STD_LIBS --abis=$ABIS  --ndk-dir=$ANDROID_NDK_ROOT --linkage=$LINKAGE --verbose $BOOST_SRC_DIR  2>&1 | tee -a $logFile
 
+# mine:
+#     echo "........Running b2 with: NUM_JOBS = "$NUM_JOBS" address-model = "$BJAMADDRMODEL" architecture = "$BJAMARCH" abi  = "$BJAMABI "WITHOUT  = "$WITHOUT "  PREFIX = "$PREFIX " BUILD_DIR  = "$BUILD_DIR  "
+
+#........Running b2 with: NUM_JOBS = 12, address-model = 32, architecture = arm, abi  = aapcs, WITHOUT  =  --without-python   PREFIX = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost/armeabi-v7a/llvm/install  BUILD_DIR  = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost
+
+#........Running b2 with: NUM_JOBS = 12, address-model = 64, architecture = arm, abi  = aapcs, WITHOUT  =  --without-python   PREFIX = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost/arm64-v8a/llvm/install  BUILD_DIR  = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost
+
+#........Running b2 with: NUM_JOBS = 12, address-model = 32, architecture = x86, abi  = sysv, WITHOUT  =  --without-python   PREFIX = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost/x86/llvm/install  BUILD_DIR  = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost
+
+#........Running b2 with: NUM_JOBS = 12, address-model = 64, architecture = x86, abi  = sysv, WITHOUT  =  --without-python   PREFIX = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost/x86_64/llvm/install  BUILD_DIR  = /home/bfa/build_tools/../build_tmp/tmp/build-17419/build-boost
 
 
+# NB:   address-model   = 32 | 64, 
+#       architecture    = arm | x86, 
+#       abi             = aapcs | sysv,
+
+
+
+# wundke:
+# echo "........Running bjam with: NCPU = "$NCPU" target-os = "$TARGET_OS" toolset = "$TOOLSET_ARCH" cflag = "$cflag" cflag = "$cflag" cxxflags  = "$cxxflags " WITHOUT_LIBRARIES  = "$WITHOUT_LIBRARIES  " ARCH  = "$ARCH " LIBRARIES  =
+
+# different to wundke:
+#         binary-format=elf \
+#         address-model=$BJAMADDRMODEL \
+#         architecture=$BJAMARCH \
+#         abi=$BJAMABI \
+#         --user-config=user-config.jam \
+#         --layout=system \
+
+# wundke call to bjam:
+# echo "........Running bjam with: NCPU = "$NCPU" target-os = "$TARGET_OS" toolset = "$TOOLSET_ARCH" cflag = "$cflag" cxxflags  = "$cxxflags " WITHOUT_LIBRARIES  = "$WITHOUT_LIBRARIES  " ARCH  = "$ARCH " LIBRARIES  = "$LIBRARIES " 
+
+# ........Running bjam with: NCPU = 6 target-os = android, toolset  = clang-arm64v8a,     ARCH  = arm64-v8a       cflag =  cxxflags  =   WITHOUT_LIBRARIES  = --without-python   LIBRARIES  =   LIBRARIES_BROKEN   = 
+# ........Running bjam with: NCPU = 6 target-os = android, toolset  = clang-armeabiv7a,   ARCH  = armeabi-v7a     cflag =  cxxflags  =   WITHOUT_LIBRARIES  = --without-python   LIBRARIES  =   LIBRARIES_BROKEN   = 
+# ........Running bjam with: NCPU = 6 target-os = android, toolset  = clang-x86,          ARCH  = x86             cflag =  cxxflags  =   WITHOUT_LIBRARIES  = --without-python   LIBRARIES  =   LIBRARIES_BROKEN   = 
+# ........Running bjam with: NCPU = 6 target-os = android, toolset  = clang-x8664,        ARCH  = x86_64          cflag =  cxxflags  =   WITHOUT_LIBRARIES  = --without-python   LIBRARIES  =   LIBRARIES_BROKEN   = 
+
+# NB:   target-os = android (but android not mentioned as option in boost doc)
+#   toolset  = clang-armeabiv7a,
 #--------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------
 # Build example app (the actual call) - dont modify
