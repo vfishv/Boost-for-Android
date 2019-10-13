@@ -1,8 +1,8 @@
 
-export BOOST_DIR=$(pwd)/down/boost_src/boost_1_71_0/
+export BOOST_DIR=$(pwd)/down/boost_src/boost_1_71_0
 
 
-export NDK_DIR=/home/declan/zone/low/Boost-for-Android/down/ndk/20
+export NDK_DIR=$(pwd)/down/ndk/20
 
 #export ARCHLIST="arm64-v8a" 
 export ARCHLIST="arm64-v8a armeabi-v7a x86 x86_64"
