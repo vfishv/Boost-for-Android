@@ -2,31 +2,20 @@
 # see here for info on "new paths for toolchains":
 # https://developer.android.com/ndk/guides/other_build_systems
 
-# also useful ndk details:s 
+# also useful ndk details:
 # https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md
 
 
 
-BOOST_DIR=$(pwd)/boost_1_70_0
+
+#----------------------------------------------------
 
 BUILD_DIR=$(pwd)/build
 mkdir --parents $BUILD_DIR
 
-
 PREFIX_DIR=${BUILD_DIR}/install
 
-export NDK_DIR=/home/declan/zone/low/Boost-for-Android/down/ndk/20
-
-#ARCHLIST="arm64-v8a" 
-ARCHLIST="arm64-v8a armeabi-v7a x86 x86_64"
-
-#LINKAGE_LIST="shared"
-LINKAGE_LIST="shared static" # can be "shared" or "static" or "shared static" (both)
-
 WITHOUT_LIBRARIES=--without-python
-
-
-
 
 #----------------------------------------------------------------------------------
 # map ARCH to toolset name (following "using clang :") used in user-config.jam
