@@ -7,20 +7,25 @@
 
 
 
-BOOST_DIR="boost_1_70_0"
+BOOST_DIR=$(pwd)/boost_1_70_0
 
-BUILD_DIR="./build/"
-PREFIX_DIR=$BUILD_DIR/install
+BUILD_DIR=$(pwd)/build
+mkdir --parents $BUILD_DIR
+
+
+PREFIX_DIR=${BUILD_DIR}/install
 
 export NDK_DIR=/home/declan/zone/low/Boost-for-Android/down/ndk/20
 
-#ARCHLIST="arm64-v8a" 
-ARCHLIST="arm64-v8a armeabi-v7a x86 x86_64"
+ARCHLIST="arm64-v8a" 
+#ARCHLIST="arm64-v8a armeabi-v7a x86 x86_64"
 
-
-LINKAGE_LIST="shared static" # can be "shared" or "static" or "shared static" (both)
+LINKAGE_LIST="shared"
+#LINKAGE_LIST="shared static" # can be "shared" or "static" or "shared static" (both)
 
 WITHOUT_LIBRARIES=--without-python
+
+
 
 
 #----------------------------------------------------------------------------------
@@ -48,18 +53,21 @@ toolset_for_arch() {
 USER_CONFIG_FILE=$(pwd)/user-config.jam
 echo "USER_CONFIG_FILE = " $USER_CONFIG_FILE
 
+
+
+
 cd $BOOST_DIR
 
 #-------------------------------------------
 # Bootstrap
 # ---------
-if [ ! -f ./$BOOST_DIR/b2 ]
+if [ ! -f ${BOOST_DIR}/b2 ]
 then
   # Make the initial bootstrap
   echo "Performing boost bootstrap"
 
-
-  ./bootstrap.sh 2>&1 | tee -a bootstrap.log
+    touch ${BUILD_DIR}/bootstrap.log
+  ./bootstrap.sh 2>&1 | tee -a ${BUILD_DIR}/bootstrap.log
 fi
   
 #-------------------------------------------  
@@ -68,14 +76,19 @@ fi
 num_cores=$(grep -c ^processor /proc/cpuinfo)
 echo " cores available = " $num_cores 
 
+ 
 #------------------------------------------- 
                 
-# layout=versioned | system            
+# layout=versioned | system     
+
+ 
          
 for LINKAGE in $LINKAGE_LIST; do
 
     for ARCH in $ARCHLIST; do
+    
         toolset_name="$(toolset_for_arch $ARCH)"
+
         {
             ./b2 -q                         \
                 --ignore-site-config         \
@@ -87,17 +100,17 @@ for LINKAGE in $LINKAGE_LIST; do
                 threading=multi              \
                 --layout=system           \
                 $WITHOUT_LIBRARIES           \
-                --build-dir="./../$BUILD_DIR/tmp/$ARCH" \
+                --build-dir=${BUILD_DIR}/tmp/$ARCH \
                 --prefix=${PREFIX_DIR}/$ARCH \
                 install 2>&1                 \
-                || { echo "Error: Failed to build boost for $ARCH!" ; rm -rf ./../$BUILD_DIR/out/$ARCH ; exit 1 ; }
-        } | tee -a build.log
+                || { echo "Error: Failed to build boost for $ARCH!";}
+        } | tee -a ${BUILD_DIR}/build.log
         
     done # for ARCH in $ARCHLIST
-
+    
 done # for LINKAGE in $LINKAGE_LIST
 
 
-echo "built boost to " ${PREFIX_DIR}
+echo "built boost to "  ${PREFIX_DIR}
 
 
