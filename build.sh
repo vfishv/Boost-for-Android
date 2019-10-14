@@ -16,15 +16,24 @@ mkdir --parents $BUILD_DIR
 PREFIX_DIR=${BUILD_DIR}/install
 
 WITHOUT_LIBRARIES=--without-python
+WITH_LIBRARIES="--with-chrono --with-system"
 
+
+       # binary-format: elf
+       # abi:            "arm64-v8a, x86_64" : appcs,    "armeabi-v7a, x86" : sysv
+        
+       # address-model:  "arm64-v8a, x86_64" : 64,       "armeabi-v7a, x86" : 32
+      #  architecture: "arm64-v8a armeabi-v7a": arm, "x86 x86_64": x8664
+        
+        
 #----------------------------------------------------------------------------------
 # map ARCH to toolset name (following "using clang :") used in user-config.jam
-toolset_for_arch() {
+toolset_for_abi_name() {
 
 
-    local arch=$1
+    local abi_name=$1
     
-    case "$arch" in
+    case "$abi_name" in
         arm64-v8a)      echo "arm64v8a"
         ;;
         armeabi-v7a)    echo "armeabiv7a"
@@ -35,17 +44,14 @@ toolset_for_arch() {
         ;;
         
     esac
-    
 }
-
 #----------------------------------------------------------------------------------
-# map abi to pass to b2 .. omplains 
-abi_for_arch() {
+abi_for_abi_name() {
 
 
-    local arch=$1
+    local abi_name=$1
     
-    case "$arch" in
+    case "$abi_name" in
         arm64-v8a)      echo "aapcs"
         ;;
         armeabi-v7a)    echo "aapcs"
@@ -53,6 +59,43 @@ abi_for_arch() {
         x86)            echo "sysv"
         ;;
         x86_64)         echo "sysv"
+        ;;
+        
+    esac
+    
+}
+#----------------------------------------------------------------------------------
+arch_for_abi_name() {
+
+    local abi_name=$1
+    
+    case "$abi_name" in
+        arm64-v8a)      echo "arm"
+        ;;
+        armeabi-v7a)    echo "arm"
+        ;;
+        x86)            echo "x86"
+        ;;
+        x86_64)         echo "x86"
+        ;;
+        
+    esac
+    
+}
+
+#----------------------------------------------------------------------------------
+address_model_for_abi_name() {
+
+    local abi_name=$1
+    
+    case "$abi_name" in
+        arm64-v8a)      echo "64"
+        ;;
+        armeabi-v7a)    echo "32"
+        ;;
+        x86)            echo "32"
+        ;;
+        x86_64)         echo "64"
         ;;
         
     esac
@@ -109,33 +152,43 @@ fi
 num_cores=$(grep -c ^processor /proc/cpuinfo)
 echo " cores available = " $num_cores 
 
- 
+
+#persist_ndk_version
 #------------------------------------------- 
                 
 # layout=versioned | system     
 
  
          
-for LINKAGE in $LINKAGE_LIST; do
+for LINKAGE in $LINKAGES; do
 
-    for ARCH in $ARCHLIST; do
+  
+    for ABI_NAME in $ABI_NAMES; do
     
-        toolset_name="$(toolset_for_arch $ARCH)"
-        abi_name="$(abi_for_arch $ARCH)"
-
+       
+        
+        toolset_name="$(toolset_for_abi_name $ABI_NAME)"
+        abi="$(abi_for_abi_name $ABI_NAME)"
+        address_model="$(address_model_for_abi_name $ABI_NAME)"
+        arch_for_abi="$(arch_for_abi_name $ABI_NAME)"
+        
+        echo "building .. abi-name= " $ABI_NAME " with abi = " $abi 
+         
+        
         {
-             #abi=aapcs address-model=32 architecture=arm binary-format=elf threading=multi toolset=clang \
-            ./b2 -q                         \
-                abi=$abi_name    \
+            ./b2 -d+2 -q  -j$num_cores    \
+                binary-format=elf \
+                address-model=$address_model \
+                architecture=$arch_for_abi \
+                abi=$abi    \
                 toolset=clang-$toolset_name     \
-                --ignore-site-config         \
-                -j$num_cores                      \
-                target-os=android           \
-                --user-config=$USER_CONFIG_FILE \
                 link=$LINKAGE                  \
                 threading=multi              \
+                target-os=android           \
+                --ignore-site-config         \
+                --user-config=$USER_CONFIG_FILE \
                 --layout=system           \
-                $WITHOUT_LIBRARIES           \
+                $WITH_LIBRARIES           \
                 --build-dir=${BUILD_DIR}/tmp/$ARCH \
                 --prefix=${PREFIX_DIR}/$ARCH \
                 install 2>&1                 \
@@ -148,5 +201,9 @@ done # for LINKAGE in $LINKAGE_LIST
 
 
 echo "built boost to "  ${PREFIX_DIR}
+
+
+        
+        
 
 
