@@ -170,7 +170,7 @@ for LINKAGE in $LINKAGES; do
                 --build-dir=${BUILD_DIR}/tmp/$ABI_NAME \
                 --prefix=${PREFIX_DIR}/$ABI_NAME \
                 install 2>&1                 \
-                || { echo "Error: Failed to build boost for $ARCH!";}
+                || { echo "Error: Failed to build boost for $ABI_NAME!";}
         } | tee -a ${BUILD_DIR}/build.log
         
     done # for ARCH in $ARCHLIST
@@ -182,4 +182,10 @@ done # for LINKAGE in $LINKAGE_LIST
 persist_ndk_version
 
 echo "built boost to "  ${PREFIX_DIR}
+
+
+# todo do a second step install where versioned libraries are copied (without version numbers) to a different dir structure (with single "include/" and "libs/armeabi-v7a/")
+# also need to run patchelf to remove the versioning from the libs soname
+# > patchelf --set-soname libboost_chrono.so ./libboost_chrono.so
+
 
