@@ -10,43 +10,6 @@
 
 
 
-    # (1) Build Image
-    #-----------------
-    # build docker image "my_img_droid_base" from the docker file "droid_base"
-    # > docker build -t my_img_droid_base ./droid_base
-
-       
-
-    # run docker container "my_ctr_droid" from this image, mounting the current dir as /home/bfa 
-    # If you have downloaded boost and ndk to this (host) dir then they will automatically be avialable in /home/bfa too.
-    # (Need to pass absolute host paths to mount volume- hence "pwd")
-    # 
-    # > docker run -v $(pwd):/home/bfa -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid_base 
-    
-
-
-    # (3) Build boost and app inside container
-    # ----------------------------------------
-    # Now inside docker container
-    # $ cd /home/bfa
-    #
-    # Modify ./do_docker.sh (on host), to match the boost and android ndk versions/paths in the "Configure here" section below
-    # Build boost from running docker container. 
-    # $./do_docker.sh
-    #
-    
-        
-    # Exit container, when build is finsihed,
-    # $ exit
-    #
-    # "./build" dir contains required build, but owned by root. chown to your username/group
-    # > sudo chown -R <username>:<group> ./build
-    # > sudo chown -R <username>:<group> ./build_tmp
-
-
-
-
-
 
 FROM amd64/ubuntu:18.04
 #---------------------- 
