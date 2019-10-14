@@ -6,8 +6,6 @@
 # https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md
 
 
-
-
 #----------------------------------------------------
 
 BUILD_DIR=$(pwd)/build
@@ -19,13 +17,6 @@ WITHOUT_LIBRARIES=--without-python
 WITH_LIBRARIES="--with-chrono --with-system"
 
 
-       # binary-format: elf
-       # abi:            "arm64-v8a, x86_64" : appcs,    "armeabi-v7a, x86" : sysv
-        
-       # address-model:  "arm64-v8a, x86_64" : 64,       "armeabi-v7a, x86" : 32
-      #  architecture: "arm64-v8a armeabi-v7a": arm, "x86 x86_64": x8664
-        
-        
 #----------------------------------------------------------------------------------
 # map ARCH to toolset name (following "using clang :") used in user-config.jam
 toolset_for_abi_name() {
@@ -108,7 +99,10 @@ persist_ndk_version()
     # get the version string from the "Pkg.Revision" attribute in the $ANDROID_NDK_ROOT"/source.properties" file
     # and write this to a new header file (beside include/boost/version.hpp which documents the boost version)
     local source_properties=${NDK_DIR}/source.properties
-    local headerFile=${BUILD_DIR}/include/boost/version_ndk.hpp
+    
+    local dir_path=${PREFIX_DIR}/include/boost
+    mkdir --parents $dir_path
+    local headerFile=${dir_path}/version_ndk.hpp
     
    
    local version=$(sed -En -e 's/^Pkg.Revision\s*=\s*([0-9a-f]+)/\1/p' $source_properties)
@@ -128,10 +122,6 @@ persist_ndk_version()
 }
 #-----------------------------------------
 USER_CONFIG_FILE=$(pwd)/user-config.jam
-echo "USER_CONFIG_FILE = " $USER_CONFIG_FILE
-
-
-
 
 cd $BOOST_DIR
 
@@ -152,28 +142,16 @@ fi
 num_cores=$(grep -c ^processor /proc/cpuinfo)
 echo " cores available = " $num_cores 
 
-
-#persist_ndk_version
 #------------------------------------------- 
                 
-# layout=versioned | system     
-
- 
-         
 for LINKAGE in $LINKAGES; do
 
-  
     for ABI_NAME in $ABI_NAMES; do
     
-       
-        
         toolset_name="$(toolset_for_abi_name $ABI_NAME)"
         abi="$(abi_for_abi_name $ABI_NAME)"
         address_model="$(address_model_for_abi_name $ABI_NAME)"
         arch_for_abi="$(arch_for_abi_name $ABI_NAME)"
-        
-        echo "building .. abi-name= " $ABI_NAME " with abi = " $abi 
-         
         
         {
             ./b2 -d+2 -q  -j$num_cores    \
@@ -189,8 +167,8 @@ for LINKAGE in $LINKAGES; do
                 --user-config=$USER_CONFIG_FILE \
                 --layout=system           \
                 $WITH_LIBRARIES           \
-                --build-dir=${BUILD_DIR}/tmp/$ARCH \
-                --prefix=${PREFIX_DIR}/$ARCH \
+                --build-dir=${BUILD_DIR}/tmp/$ABI_NAME \
+                --prefix=${PREFIX_DIR}/$ABI_NAME \
                 install 2>&1                 \
                 || { echo "Error: Failed to build boost for $ARCH!";}
         } | tee -a ${BUILD_DIR}/build.log
@@ -200,10 +178,8 @@ for LINKAGE in $LINKAGES; do
 done # for LINKAGE in $LINKAGE_LIST
 
 
+
+persist_ndk_version
+
 echo "built boost to "  ${PREFIX_DIR}
-
-
-        
-        
-
 
