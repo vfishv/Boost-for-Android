@@ -1,5 +1,5 @@
 
-export BOOST_DIR=$(pwd)/down/boost_src/boost_1_71_0
+export BOOST_DIR=$(pwd)/down/boost/1.71.0
 
 
 export NDK_DIR=$(pwd)/down/ndk/20
