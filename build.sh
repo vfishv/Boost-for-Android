@@ -58,7 +58,31 @@ abi_for_arch() {
     esac
     
 }
+#----------------------------------------------------------------------------------
+# write the ndk version to a header file for future reference and programmatic querying
+persist_ndk_version()
+{
+    # get the version string from the "Pkg.Revision" attribute in the $ANDROID_NDK_ROOT"/source.properties" file
+    # and write this to a new header file (beside include/boost/version.hpp which documents the boost version)
+    local source_properties=${NDK_DIR}/source.properties
+    local headerFile=${BUILD_DIR}/include/boost/version_ndk.hpp
+    
+   
+   local version=$(sed -En -e 's/^Pkg.Revision\s*=\s*([0-9a-f]+)/\1/p' $source_properties)
+    
+   
+   echo "writing NDK version $version to $headerFile "
+    
+   echo '#ifndef BOOST_VERSION_NDK_HPP'  > $headerFile
+   echo '#define BOOST_VERSION_NDK_HPP' >> $headerFile
 
+   echo -e '\n//The version of the NDK used to build boost' >>  $headerFile
+   echo -e " #define BOOST_BUILT_WITH_NDK_VERSION  \"$version\" \\n" >>$headerFile
+   
+   echo '#endif' >>$headerFile
+    
+
+}
 #-----------------------------------------
 USER_CONFIG_FILE=$(pwd)/user-config.jam
 echo "USER_CONFIG_FILE = " $USER_CONFIG_FILE
