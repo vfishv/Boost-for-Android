@@ -8,15 +8,16 @@
 
 #----------------------------------------------------
 
+
 BUILD_DIR=$(pwd)/build
-BUILD_DIR_OUT=${BUILD_DIR}/out
-mkdir --parents ${BUILD_DIR_OUT}
+mkdir --parents ${BUILD_DIR}
 
 
-BUILD_DIR_OUT_TMP=${BUILD_DIR_OUT}/tmp
+BUILD_DIR_TMP=${BUILD_DIR}/tmp
 #mkdir --parents ${BUILD_DIR_OUT_TMP}
 
-PREFIX_DIR=${BUILD_DIR_OUT}/prefix
+PREFIX_DIR=${BUILD_DIR}/install
+ mkdir --parents ${PREFIX_DIR}
 
 WITHOUT_LIBRARIES=--without-python
 WITH_LIBRARIES="--with-chrono --with-system"
@@ -125,7 +126,64 @@ persist_ndk_version()
     
 
 }
-#-----------------------------------------
+
+#----------------------------------------------------------------------------------
+fix_version_suffices() {
+
+# 1) remove files that are symbolic links 
+# 2)  remove version suffix on (remaining):
+#   a) file names and 
+#   b) in the "soname" of the elf header
+ 
+
+    Re0="^libboost_(.*)\.so"
+    Re1="(.[[:digit:]]+){3}$" 
+    #Re1="(.[0-9]+){3}$"
+
+    #echo "+++++++++++++++++++++++++++"
+    for DIR_NAME in $ABI_NAMES; do
+    
+        DIR_PATH=$PREFIX_DIR/$DIR_NAME
+      #  echo ""
+       # echo "DIR_PATH = " $DIR_PATH
+        FILE_NAMES=$(ls $DIR_PATH)
+       # echo "$FILE_NAMES"
+        
+       # echo ""
+       # echo "should delete:"
+       # echo "--------------"
+        for FILE_NAME in $FILE_NAMES; do
+            File=$(echo $FILE_NAME |  grep -Pv  ${Re0}${Re1})
+       #     echo "checking file " $Del_File
+            if [ ! -z "$File" ]  && ! [[ $File == cmake* ]] && ! [[ $File == *.a ]]
+            then 
+       #         echo $File
+                rm $DIR_PATH/$File
+                
+            fi    
+        done    
+        
+        #echo ""
+        #echo "should NOT delete:"
+        #echo "------------------"
+        for FILE_NAME in $FILE_NAMES; do
+            File=$(echo $FILE_NAME |  grep -P  ${Re0}${Re1})
+            
+            if [ ! -z "$File" ] 
+            then 
+                NEW_NAME=$(echo $FILE_NAME | grep -Po ${Re0}"(?="${Re1}")")
+            # echo $File " ->" $NEW_NAME
+                mv $DIR_PATH/$File $DIR_PATH/$NEW_NAME
+                patchelf --set-soname $NEW_NAME $DIR_PATH/$NEW_NAME
+            fi 
+            
+        done 
+    done
+}
+#----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+
+
 USER_CONFIG_FILE=$(pwd)/user-config.jam
 
 cd $BOOST_DIR
@@ -147,7 +205,13 @@ fi
 num_cores=$(grep -c ^processor /proc/cpuinfo)
 echo " cores available = " $num_cores 
 
+
+
+
 #------------------------------------------- 
+                
+
+
                 
 for LINKAGE in $LINKAGES; do
 
@@ -172,20 +236,23 @@ for LINKAGE in $LINKAGES; do
                 --user-config=$USER_CONFIG_FILE \
                 --layout=system           \
                 $WITH_LIBRARIES           \
-                --build-dir=${BUILD_DIR_OUT_TMP}/$ABI_NAME \
+                --build-dir=${BUILD_DIR_TMP}/$ABI_NAME \
                 --includedir=${PREFIX_DIR}/include \
                 --libdir=${PREFIX_DIR}/$ABI_NAME \
                 install 2>&1                 \
                 || { echo "Error: Failed to build boost for $ABI_NAME!";}
-        } | tee -a ${BUILD_DIR_OUT}/build.log
+        } | tee -a ${BUILD_DIR}/build.log
         
     done # for ARCH in $ARCHLIST
     
 done # for LINKAGE in $LINKAGE_LIST
 
+#------------------------------------------- 
 
 
 persist_ndk_version
+
+fix_version_suffices
 
 echo "built boost to "  ${PREFIX_DIR}
 
