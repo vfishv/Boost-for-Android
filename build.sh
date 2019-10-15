@@ -14,10 +14,12 @@ mkdir --parents ${BUILD_DIR}
 
 
 BUILD_DIR_TMP=${BUILD_DIR}/tmp
-#mkdir --parents ${BUILD_DIR_OUT_TMP}
 
 PREFIX_DIR=${BUILD_DIR}/install
- mkdir --parents ${PREFIX_DIR}
+mkdir --parents ${PREFIX_DIR}
+ 
+LIBS_DIR=${PREFIX_DIR}/libs
+INCLUDE_DIR=${PREFIX_DIR}/include
 
 WITHOUT_LIBRARIES=--without-python
 WITH_LIBRARIES="--with-chrono --with-system"
@@ -143,7 +145,7 @@ fix_version_suffices() {
     #echo "+++++++++++++++++++++++++++"
     for DIR_NAME in $ABI_NAMES; do
     
-        DIR_PATH=$PREFIX_DIR/$DIR_NAME
+        DIR_PATH=$LIBS_DIR/$DIR_NAME
       #  echo ""
        # echo "DIR_PATH = " $DIR_PATH
         FILE_NAMES=$(ls $DIR_PATH)
@@ -237,8 +239,8 @@ for LINKAGE in $LINKAGES; do
                 --layout=system           \
                 $WITH_LIBRARIES           \
                 --build-dir=${BUILD_DIR_TMP}/$ABI_NAME \
-                --includedir=${PREFIX_DIR}/include \
-                --libdir=${PREFIX_DIR}/$ABI_NAME \
+                --includedir=${INCLUDE_DIR} \
+                --libdir=${LIBS_DIR}/$ABI_NAME \
                 install 2>&1                 \
                 || { echo "Error: Failed to build boost for $ABI_NAME!";}
         } | tee -a ${BUILD_DIR}/build.log
