@@ -9,9 +9,14 @@
 #----------------------------------------------------
 
 BUILD_DIR=$(pwd)/build
-mkdir --parents $BUILD_DIR
+BUILD_DIR_OUT=${BUILD_DIR}/out
+mkdir --parents ${BUILD_DIR_OUT}
 
-PREFIX_DIR=${BUILD_DIR}/install
+
+BUILD_DIR_OUT_TMP=${BUILD_DIR_OUT}/tmp
+#mkdir --parents ${BUILD_DIR_OUT_TMP}
+
+PREFIX_DIR=${BUILD_DIR_OUT}/prefix
 
 WITHOUT_LIBRARIES=--without-python
 WITH_LIBRARIES="--with-chrono --with-system"
@@ -154,7 +159,7 @@ for LINKAGE in $LINKAGES; do
         arch_for_abi="$(arch_for_abi_name $ABI_NAME)"
         
         {
-            ./b2 -d+2 -q  -j$num_cores    \
+            ./b2 -q -j$num_cores    \
                 binary-format=elf \
                 address-model=$address_model \
                 architecture=$arch_for_abi \
@@ -167,11 +172,11 @@ for LINKAGE in $LINKAGES; do
                 --user-config=$USER_CONFIG_FILE \
                 --layout=system           \
                 $WITH_LIBRARIES           \
-                --build-dir=${BUILD_DIR}/tmp/$ABI_NAME \
+                --build-dir=${BUILD_DIR_OUT_TMP}/$ABI_NAME \
                 --prefix=${PREFIX_DIR}/$ABI_NAME \
                 install 2>&1                 \
                 || { echo "Error: Failed to build boost for $ABI_NAME!";}
-        } | tee -a ${BUILD_DIR}/build.log
+        } | tee -a ${BUILD_DIR_OUT}/build.log
         
     done # for ARCH in $ARCHLIST
     
