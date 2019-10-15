@@ -41,41 +41,80 @@ Re0="^libboost_(.*)\.so"
 Re1="(.[[:digit:]]+){3}$" 
 #Re1="(.[0-9]+){3}$"
 
+# 
+# #echo "libboost_system.so.1.71.0" | grep -Po "^libboost_(.*)\.so(.[[:digit:]]+){3}$" 
+# echo "-----------------------------"
+# echo "0: " 
+# echo $str0 | grep -P ${Re0}${Re1}
+# echo $str0 | grep -Po ${Re0}"(?="${Re1}")"
+# 
+# echo "1: " 
+# echo $str1 | grep -P ${Re0}${Re1}
+# echo $str2 | grep -Po ${Re0}"(?="${Re1}")"
+# 
+# echo "2: " 
+# echo $str2 | grep -P ${Re0}${Re1}
+# echo $str2 | grep -Po ${Re0}"(?="${Re1}")"
+# 
+# echo "3: " 
+# echo $str3 | grep -P ${Re0}${Re1}
+# echo $str3 | grep -Po ${Re0}"(?="${Re1}")"
+# 
+# echo "-----------------------------"
+# echo "Those names not matching - should be deleted"
+# echo "0v: " 
+# echo $str0 | grep -P -v ${Re0}${Re1}
+# 
+# echo "1v: " 
+# echo $str1 | grep -P -v ${Re0}${Re1}
+# echo "2v: " 
+# 
+# echo $str2 | grep -P -v ${Re0}${Re1}
+# 
+# echo "3v: " 
+# echo $str3 | grep -P -v ${Re0}${Re1}
 
-#echo "libboost_system.so.1.71.0" | grep -Po "^libboost_(.*)\.so(.[[:digit:]]+){3}$" 
-echo "-----------------------------"
-echo "0: " 
-echo $str0 | grep -P ${Re0}${Re1}
-echo $str0 | grep -Po ${Re0}"(?="${Re1}")"
-
-echo "1: " 
-echo $str1 | grep -P ${Re0}${Re1}
-echo $str2 | grep -Po ${Re0}"(?="${Re1}")"
-
-echo "2: " 
-echo $str2 | grep -P ${Re0}${Re1}
-echo $str2 | grep -Po ${Re0}"(?="${Re1}")"
-
-echo "3: " 
-echo $str3 | grep -P ${Re0}${Re1}
-echo $str3 | grep -Po ${Re0}"(?="${Re1}")"
-
-
-echo "Those names not matching - should be deleted"
-echo "0v: " 
-echo $str0 | grep -P -v ${Re0}${Re1}
-
-echo "1v: " 
-echo $str1 | grep -P -v ${Re0}${Re1}
-echo "2v: " 
-
-echo $str2 | grep -P -v ${Re0}${Re1}
-
-echo "3v: " 
-echo $str3 | grep -P -v ${Re0}${Re1}
 
 
 
+#----------------------------------------------------------------------------------
+address_model_for_abi_name() {
+
+    local abi_name=$1
+
+}  
+    
+export ABI_NAMES="armeabi-v7a arm64-v8a"
+    echo "+++++++++++++++++++++++++++"
+    for DIR_NAME in $ABI_NAMES; do
+    
+        DIR_PATH=$PREFIX_DIR/$DIR_NAME
+        echo ""
+        echo "DIR_PATH = " $DIR_PATH
+        FILE_NAMES=$(ls $DIR_PATH)
+        #echo "$FILE_NAMES"
+        
+        echo ""
+        echo "should delete:"
+        echo "--------------"
+        for FILE_NAME in $FILE_NAMES; do
+            Del_File=$(echo $FILE_NAME |  grep -Pv  ${Re0}${Re1})
+           # echo "checking file " $Del_File
+            if [ ! -z "$Del_File" ] 
+            then
+                echo $Del_File
+                
+            fi    
+        done    
+        
+        echo ""
+        echo "should NOT delete:"
+        echo "------------------"
+        for FILE_NAME in $FILE_NAMES; do
+            echo $FILE_NAME |  grep -P  ${Re0}${Re1}
+        done 
+        
+done
 
 
 # todo do a second step install where versioned libraries are copied (without version numbers) to a different dir structure (with single "include/" and "libs/armeabi-v7a/")
