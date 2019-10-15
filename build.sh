@@ -173,7 +173,8 @@ for LINKAGE in $LINKAGES; do
                 --layout=system           \
                 $WITH_LIBRARIES           \
                 --build-dir=${BUILD_DIR_OUT_TMP}/$ABI_NAME \
-                --prefix=${PREFIX_DIR}/$ABI_NAME \
+                --includedir=${PREFIX_DIR}/include \
+                --libdir=${PREFIX_DIR}/$ABI_NAME \
                 install 2>&1                 \
                 || { echo "Error: Failed to build boost for $ABI_NAME!";}
         } | tee -a ${BUILD_DIR_OUT}/build.log
