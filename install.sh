@@ -98,12 +98,11 @@ export ABI_NAMES="armeabi-v7a arm64-v8a"
         echo "should delete:"
         echo "--------------"
         for FILE_NAME in $FILE_NAMES; do
-            Del_File=$(echo $FILE_NAME |  grep -Pv  ${Re0}${Re1})
+            File=$(echo $FILE_NAME |  grep -Pv  ${Re0}${Re1})
            # echo "checking file " $Del_File
-            if [ ! -z "$Del_File" ] 
-            then
-                echo $Del_File
-                
+            if [ ! -z "$File" ]  && ! [[ $File == cmake* ]]
+            then 
+                echo $File
             fi    
         done    
         
@@ -111,7 +110,15 @@ export ABI_NAMES="armeabi-v7a arm64-v8a"
         echo "should NOT delete:"
         echo "------------------"
         for FILE_NAME in $FILE_NAMES; do
-            echo $FILE_NAME |  grep -P  ${Re0}${Re1}
+            File=$(echo $FILE_NAME |  grep -P  ${Re0}${Re1})
+            
+            if [ ! -z "$File" ] 
+            then 
+                NEW_NAME=$(echo $FILE_NAME | grep -Po ${Re0}"(?="${Re1}")")
+                echo $File " ->" $NEW_NAME
+            fi 
+           # $NEW_NAME= $(echo $FILE_NAME | grep -Po ${Re0}"(?="${Re1}")"
+            
         done 
         
 done
