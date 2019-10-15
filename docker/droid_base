@@ -43,6 +43,9 @@ RUN apt-get -y install build-essential
 RUN apt-get -y install libc6-dev-i386
 RUN apt-get -y install clang
 
+# need this to change soname of boost libraries
+RUN apt-get install patchelf
+
 
 
     
