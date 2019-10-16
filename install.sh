@@ -1,13 +1,21 @@
-With boost 1.69 the
 
 
-patchelf --remove-needed libboost_system.so.1.69.0 libboost_chrono.so 
+NEEDED:
+-------
+ patchelf --remove-needed libboost_system.so.1.69.0 libboost_chrono.so 
  readelf -a libboost_chrono.so | grep NEEDED
 
  patchelf --add-needed libboost_system.so libboost_chrono.so 
  readelf -a libboost_chrono.so | grep NEEDED
 
 
+SONAME:
+-------
+ readelf -a libboost_chrono.so | grep SONAME
+ patchelf --set-soname libboost_system.so libboost_system.so
+ patchelf --set-soname libboost_chrono.so libboost_chrono.so
+ 
+ 
 ---------------------------------------------------------
 
 arm64-v8a:
