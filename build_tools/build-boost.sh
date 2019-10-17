@@ -202,10 +202,10 @@ mktool()
 #-------------------------------------------------------------------
 # ndk 16+ BEGIN
 #--------------
-my_sys_inc()
-{
-    echo "$NDK_DIR/sysroot/usr/include"
-}
+# my_sys_inc()
+# {
+#     echo "$NDK_DIR/sysroot/usr/include"
+# }
 #----------------------------------------
 my_triple_for()
 {
@@ -238,20 +238,20 @@ my_triple_for()
     esac
 }
 #---------------------
-my_abi_inc()
-{
-    echo $(my_sys_inc)"/"$(my_triple_for $1)
-}
+# my_abi_inc()
+# {
+#     echo $(my_sys_inc)"/"$(my_triple_for $1)
+# }
 #---------------------
-my_abi_inc_flag()
-{
-    echo "-I"$(my_abi_inc $1)
-}
-#---------------------
-my_sys_inc_flag()
-{
-    echo "-I"$(my_sys_inc)
-}
+# my_abi_inc_flag()
+# {
+#     echo "-I"$(my_abi_inc $1)
+# }
+# #---------------------
+# my_sys_inc_flag()
+# {
+#     echo "-I"$(my_sys_inc)
+# }
 #---------------------
 # ndk 16+ END
 #-------------------------------------------------------------------
@@ -518,8 +518,8 @@ build_boost_for_abi ()
 #---------------
 # ndk 16+ BEGIN
 #---------------
-    LIBSTDCXX_CFLAGS="$LIBSTDCXX_CFLAGS $(my_sys_inc_flag)"
-    LIBSTDCXX_CFLAGS="$LIBSTDCXX_CFLAGS $(my_abi_inc_flag $ABI)"
+ #   LIBSTDCXX_CFLAGS="$LIBSTDCXX_CFLAGS $(my_sys_inc_flag)"
+ #   LIBSTDCXX_CFLAGS="$LIBSTDCXX_CFLAGS $(my_abi_inc_flag $ABI)"
 #---------------
 # ndk 16+ END
 #---------------
