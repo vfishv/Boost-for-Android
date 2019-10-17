@@ -402,7 +402,7 @@ build_boost_for_abi ()
     fail_panic "Could not create project-config.jam"
 
     {
-        echo "using mpi ;"
+         echo "" # "using mpi ;"
     } | cat >user-config.jam
     fail_panic "Could not create user-config.jam"
 
