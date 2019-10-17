@@ -629,7 +629,7 @@ EOF
         --layout=system \
         --prefix=$PREFIX \
         --build-dir=$BUILDDIR/build \
-        $WITH \
+        $WITHOUT \
         install \
 
     fail_panic "Couldn't build Boost $BOOST_VERSION $ABI libraries"
