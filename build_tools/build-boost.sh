@@ -502,12 +502,12 @@ build_boost_for_abi ()
             CXX="$LLVM_DIR/bin/${LLVMTRIPLE}-clang++"
             CXXNAME=clang++
             #local LLVMLIBCXX=$NDK_DIR/sources/cxx-stl/llvm-libc++/$(expr "$LIBSTDCXX" : "^llvm-\(.*\)$")
-            local LLVMLIBCXX=$NDK_DIR/sources/cxx-stl/llvm-libc++
+            #local LLVMLIBCXX=$NDK_DIR/sources/cxx-stl/llvm-libc++
             #local LLVMLIBCXXABI=$NDK_DIR/sources/cxx-stl/llvm-libc++abi
             #LIBSTDCXX_CFLAGS="-I$LLVMLIBCXX/libcxx/include -I$LLVMLIBCXXABI/libcxxabi/include"
-            LIBSTDCXX_CFLAGS="-I$NDK_DIR/sources/cxx-stl/llvm-libc++/include -I$NDK_DIR/sources/cxx-stl/llvm-libc++abi/include -I$NDK_DIR/sources/android/support/include"
+            #LIBSTDCXX_CFLAGS="-I$NDK_DIR/sources/cxx-stl/llvm-libc++/include -I$NDK_DIR/sources/cxx-stl/llvm-libc++abi/include -I$NDK_DIR/sources/android/support/include"
             
-            LIBSTDCXX_LDFLAGS="-L$LLVMLIBCXX/libs/$ABI"
+            #LIBSTDCXX_LDFLAGS="-L$LLVMLIBCXX/libs/$ABI"
             LIBSTDCXX_LDLIBS="-lc++_shared"
             FLAGS="$FLAGS -fno-integrated-as"
             ;;
