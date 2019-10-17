@@ -673,11 +673,12 @@ EOF
         fi
     fi
 
-    WITH="--with-chrono --with-system"
+    local WITH="--with-chrono --with-system"
+    local NUM_CORES=$(grep -c ^processor /proc/cpuinfo)
     
     local PREFIX=$BUILDDIR/install
 
-    run ./b2 -d+2 -q -j$NUM_JOBS \
+    run ./b2 -d+2 -q -j$NUM_CORES \
         variant=release \
         link=$LIB_LINKAGE \
         runtime-link=shared \
