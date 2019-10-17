@@ -110,19 +110,15 @@ register_var_option "--linkage=<shared,static>" LIB_LINKAGE "Whether to build bo
 LIB_INSTALL_DIR=$ABS_PATH_THIS_SCRIPT/../build
 register_var_option "--install_dir=<./build>" LIB_INSTALL_DIR "Absolute path to dir where built binaries should be copied [./build]"
 
-STDLIBS=""
-for VERSION in $DEFAULT_GCC_VERSION_LIST; do
-    STDLIBS="$STDLIBS gnu-$VERSION"
-done
-for VERSION in $DEFAULT_LLVM_VERSION_LIST; do
-    STDLIBS="$STDLIBS llvm-$VERSION"
-done
-STDLIBS=$(spaces_to_commas $STDLIBS)
-register_var_option "--stdlibs=<list>" STDLIBS "List of Standard C++ Library implementations to build with"
+# which compiler to use       // gnu-4.9 removed as of ndk 16
+STD_LIBS="llvm"
+
+
 
 register_jobs_option
 
 extract_parameters "$@"
+
 
 
 
