@@ -530,6 +530,9 @@ build_boost_for_abi ()
     mktool $TMPTARGETTCDIR/$CXXNAME <<EOF
 #!/bin/sh
 
+echo "------ call to \$@"
+
+
 if echo "\$@" | tr ' ' '\\n' | grep -q -x -e -c; then
     LINKER=no
 elif echo "\$@" | tr ' ' '\\n' | grep -q -x -e -emit-pth; then
@@ -541,7 +544,8 @@ fi
 # Remove any -m32/-m64 from input parameters
 PARAMS=\`echo "\$@" | tr ' ' '\\n' | grep -v -x -e -m32 | grep -v -x -e -m64 | tr '\\n' ' '\`
 
-echo "CXX PARAMS -in- = \${PARAMS}"  .......................................... ******* 
+
+echo "CXX PARAMS --1-- = \${PARAMS}"  .......................................... 
 
 if [ "x\$LINKER" = "xyes" ]; then
     # Fix SONAME for shared libraries
@@ -607,7 +611,7 @@ run()
     exec "\$@"
 }
 
-echo "CXX PARAMS --passed-- = \${PARAMS}"  .......................................... ******* 
+echo "CXX PARAMS --2-- = \${PARAMS}"  .......................................... 
 
 run $CXX \$PARAMS
 EOF
@@ -678,7 +682,7 @@ EOF
     
     local PREFIX=$BUILDDIR/install
 
-    run ./b2 -d+2 -q -j$NUM_CORES \
+    run ./b2  -q -j$NUM_CORES \
         variant=release \
         link=$LIB_LINKAGE \
         runtime-link=shared \

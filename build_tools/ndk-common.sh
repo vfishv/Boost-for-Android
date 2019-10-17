@@ -158,13 +158,13 @@ log_n ()
 run ()
 {
     if [ "$DRYRUN" = "yes" ] ; then
-        echo "## SKIP COMMAND: $@"
+        echo "#- SKIP COMMAND: $@"
     elif [ "$VERBOSE" = "yes" ] ; then
-        echo "## COMMAND: $@"
+        echo "#- COMMAND: $@"
         "$@" 2>&1
     else
         if [ -n "$TMPLOG" ] ; then
-            echo "## COMMAND: $@" >> $TMPLOG
+            echo "#- COMMAND: $@" >> $TMPLOG
             "$@" >>$TMPLOG 2>&1
         else
             "$@" > /dev/null 2>&1
