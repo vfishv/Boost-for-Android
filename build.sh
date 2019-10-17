@@ -5,6 +5,8 @@
 # also useful ndk details:
 # https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md
 
+SAVED_PATH=$PATH 
+export PATH=$(pwd)/bin:$SAVED_PATH
 
 #----------------------------------------------------
 
@@ -259,8 +261,7 @@ fix_version_suffices
 echo "built boost to "  ${PREFIX_DIR}
 
 
-# todo do a second step install where versioned libraries are copied (without version numbers) to a different dir structure (with single "include/" and "libs/armeabi-v7a/")
-# also need to run patchelf to remove the versioning from the libs soname
-# > patchelf --set-soname libboost_chrono.so ./libboost_chrono.so
+export PATH=$SAVED_PATH
+
 
 
