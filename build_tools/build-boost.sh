@@ -540,6 +540,9 @@ fi
 
 # Remove any -m32/-m64 from input parameters
 PARAMS=\`echo "\$@" | tr ' ' '\\n' | grep -v -x -e -m32 | grep -v -x -e -m64 | tr '\\n' ' '\`
+
+echo "CXX PARAMS -in- = \${PARAMS}"  .......................................... ******* 
+
 if [ "x\$LINKER" = "xyes" ]; then
     # Fix SONAME for shared libraries
     NPARAMS=""
@@ -603,6 +606,8 @@ run()
     fi
     exec "\$@"
 }
+
+echo "CXX PARAMS --passed-- = \${PARAMS}"  .......................................... ******* 
 
 run $CXX \$PARAMS
 EOF
