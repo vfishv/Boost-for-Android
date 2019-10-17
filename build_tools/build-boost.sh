@@ -466,7 +466,7 @@ build_boost_for_abi ()
     mktool $TMPTARGETTCDIR/$CXXNAME <<EOF
 #!/bin/sh
 
-echo "------ call to \$@"
+
 
 
 if echo "\$@" | tr ' ' '\\n' | grep -q -x -e -c; then
@@ -481,7 +481,7 @@ fi
 PARAMS=\`echo "\$@" | tr ' ' '\\n' | grep -v -x -e -m32 | grep -v -x -e -m64 | tr '\\n' ' '\`
 
 
-echo "CXX PARAMS --1-- = \${PARAMS}"  .......................................... 
+
 
 if [ "x\$LINKER" = "xyes" ]; then
     # Fix SONAME for shared libraries
@@ -544,7 +544,6 @@ run()
     exec "\$@"
 }
 
-echo "CXX PARAMS --2-- = \${PARAMS}"  .......................................... 
 
 run $CXX \$PARAMS
 EOF
