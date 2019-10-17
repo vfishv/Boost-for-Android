@@ -85,8 +85,8 @@ BOOST_SUBDIR=boost
 # abs path to this script (https://gist.github.com/TheMengzor/968e5ea87e99d9c41782)
 ABS_PATH_THIS_SCRIPT=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-PACKAGE_DIR=
-register_var_option "--package-dir=<path>" PACKAGE_DIR "Put prebuilt tarballs into <path>"
+# PACKAGE_DIR=
+# register_var_option "--package-dir=<path>" PACKAGE_DIR "Put prebuilt tarballs into <path>"
 
 NDK_DIR=$ANDROID_NDK_ROOT
 register_var_option "--ndk-dir=<path>" NDK_DIR "Specify NDK root path for the build"
@@ -110,16 +110,13 @@ register_var_option "--linkage=<shared,static>" LIB_LINKAGE "Whether to build bo
 LIB_INSTALL_DIR=$ABS_PATH_THIS_SCRIPT/../build
 register_var_option "--install_dir=<./build>" LIB_INSTALL_DIR "Absolute path to dir where built binaries should be copied [./build]"
 
-# which compiler to use       // gnu-4.9 removed as of ndk 16
-STD_LIBS="llvm"
-
-
-
+#-------------------------------------
 register_jobs_option
 
 extract_parameters "$@"
 
 
+STDLIBS="llvm"
 
 
 
@@ -773,20 +770,20 @@ persist_ndk_version
 
 
 # If needed, package files into tarballs
-if [ -n "$PACKAGE_DIR" ] ; then
-    if [ "$BOOST_BUILD_FILES_NEED_PACKAGE" = "yes" ]; then
-        FILES=""
-        for F in Android.mk LICENSE_1_0.txt; do
-            FILES="$FILES $BOOST_SUBDIR/$BOOST_VERSION/$F"
-        done
-        PACKAGE_NAME="$PNAME-$BOOST_VERSION-build-files.tar.xz"
-        PACKAGE="$PACKAGE_DIR/$PACKAGE_NAME"
-        dump "Packaging: $PACKAGE"
-        pack_archive "$PACKAGE" "$NDK_DIR" "$FILES"
-        fail_panic "Could not package Boost $BOOST_VERSION build files!"
-        cache_package "$PACKAGE_DIR" "$PACKAGE_NAME"
-    fi
-fi
+# if [ -n "$PACKAGE_DIR" ] ; then
+#     if [ "$BOOST_BUILD_FILES_NEED_PACKAGE" = "yes" ]; then
+#         FILES=""
+#         for F in Android.mk LICENSE_1_0.txt; do
+#             FILES="$FILES $BOOST_SUBDIR/$BOOST_VERSION/$F"
+#         done
+#         PACKAGE_NAME="$PNAME-$BOOST_VERSION-build-files.tar.xz"
+#         PACKAGE="$PACKAGE_DIR/$PACKAGE_NAME"
+#         dump "Packaging: $PACKAGE"
+#         pack_archive "$PACKAGE" "$NDK_DIR" "$FILES"
+#         fail_panic "Could not package Boost $BOOST_VERSION build files!"
+#         cache_package "$PACKAGE_DIR" "$PACKAGE_NAME"
+#     fi
+# fi
 
 if [ -z "$OPTION_BUILD_DIR" ]; then
     log "Cleaning up..."
