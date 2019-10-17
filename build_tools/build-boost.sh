@@ -589,12 +589,9 @@ FLAGS="$FLAGS"
 if [ "x\$LINKER" = "xyes" ]; then
     FLAGS="\$FLAGS $LFLAGS"
     FLAGS="\$FLAGS $ICU_LDFLAGS"
-    FLAGS="\$FLAGS -L$LIBCRYSTAX/libs/$ABI"
     FLAGS="\$FLAGS $LIBSTDCXX_LDFLAGS"
 else
     FLAGS="\$FLAGS $ICU_CFLAGS"
-    FLAGS="\$FLAGS $LIBSTDCXX_CFLAGS"
-    FLAGS="\$FLAGS -I$LIBCRYSTAX/include"
     FLAGS="\$FLAGS -Wno-long-long"
 fi
 
