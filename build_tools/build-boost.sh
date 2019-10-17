@@ -508,7 +508,7 @@ build_boost_for_abi ()
             #LIBSTDCXX_CFLAGS="-I$NDK_DIR/sources/cxx-stl/llvm-libc++/include -I$NDK_DIR/sources/cxx-stl/llvm-libc++abi/include -I$NDK_DIR/sources/android/support/include"
             
             #LIBSTDCXX_LDFLAGS="-L$LLVMLIBCXX/libs/$ABI"
-            LIBSTDCXX_LDLIBS="-lc++_shared"
+            #LIBSTDCXX_LDLIBS="-lc++_shared"
             FLAGS="$FLAGS -fno-integrated-as"
             ;;
         *)
