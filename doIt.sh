@@ -12,16 +12,16 @@
 
 # Specify the path to boost source code dir 
 #BOOST_SRC_DIR=/home/declan/Documents/zone/low/Boost-for-Android/src
-BOOST_SRC_DIR=/home/docker-share/boost-src
+BOOST_SRC_DIR=/home/declan/zone/low/boost/Boost-for-Android/down/boost
 
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
 #BOOST_VERSION=1.64.0
-BOOST_VERSION=1.69.0
+BOOST_VERSION=1.71.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
-export ANDROID_NDK_ROOT=/home/android/android-ndk-r19c
+export ANDROID_NDK_ROOT=/home/declan/zone/low/boost/Boost-for-Android/down/ndk/20
 
 #------------------------------------------------------------------------------------------
 # Modify if desired
@@ -43,14 +43,14 @@ STD_LIBS="llvm"
 
 # which abis (~ architecture + instruction set) to build for     
 # possible values:  {armeabi-v7a,arm64-v8a,x86,x86_64}
-#ABIS="armeabi-v7a"
-ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
+ABIS="arm64-v8a"
+#ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #ABIS="x86_64"
 
 # whether to build shared or static libraries (or both)          
 # possible values:   {shared, static}
 # LINKAGE="shared"               
-LINKAGE="shared,static"
+LINKAGE="shared"
 
 
 #--------------------------------------------------------------------------------------

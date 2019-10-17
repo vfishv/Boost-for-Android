@@ -364,27 +364,20 @@ build_boost_for_abi ()
 
     local LLVMTRIPLE
     case $ABI in
-        armeabi)
-            LLVMTRIPLE="armv5te-none-linux-androideabi"
-            ;;
+
         armeabi-v7a*)
-            LLVMTRIPLE="armv7-none-linux-androideabi"
+            LLVMTRIPLE="armv7a-linux-androideabi16"
             ;;
         arm64-v8a)
-            LLVMTRIPLE="aarch64-none-linux-android"
+            LLVMTRIPLE="aarch64-linux-android21"
             ;;
         x86)
-            LLVMTRIPLE="i686-none-linux-android"
+            LLVMTRIPLE="i686-linux-android16"
             ;;
         x86_64)
-            LLVMTRIPLE="x86_64-none-linux-android"
+            LLVMTRIPLE="x86_64-linux-android21"
             ;;
-        mips)
-            LLVMTRIPLE="mipsel-none-linux-android"
-            ;;
-        mips64)
-            LLVMTRIPLE="mips64el-none-linux-android"
-            ;;
+
         *)
             echo "ERROR: Unknown ABI: '$ABI'" 1>&2
             exit 1
@@ -505,7 +498,8 @@ build_boost_for_abi ()
             ;;
         # llvm-*)
         llvm*)
-            CXX="$LLVM_DIR/bin/clang++ -target $LLVMTRIPLE -gcc-toolchain $GCC_DIR"
+            #CXX="$LLVM_DIR/bin/clang++ -target $LLVMTRIPLE -gcc-toolchain $GCC_DIR"
+            CXX="$LLVM_DIR/bin/${LLVMTRIPLE}-clang++"
             CXXNAME=clang++
             #local LLVMLIBCXX=$NDK_DIR/sources/cxx-stl/llvm-libc++/$(expr "$LIBSTDCXX" : "^llvm-\(.*\)$")
             local LLVMLIBCXX=$NDK_DIR/sources/cxx-stl/llvm-libc++
@@ -530,7 +524,7 @@ build_boost_for_abi ()
 # ndk 16+ END
 #---------------
     
-    FLAGS="$FLAGS --sysroot=$SYSROOT"
+#    FLAGS="$FLAGS --sysroot=$SYSROOT"
     FLAGS="$FLAGS -fPIC"
 
     mktool $TMPTARGETTCDIR/$CXXNAME <<EOF
@@ -674,6 +668,8 @@ EOF
         fi
     fi
 
+    WITH="--with-chrono --with-system"
+    
     local PREFIX=$BUILDDIR/install
 
     run ./b2 -d+2 -q -j$NUM_JOBS \
@@ -690,7 +686,7 @@ EOF
         --layout=system \
         --prefix=$PREFIX \
         --build-dir=$BUILDDIR/build \
-        $WITHOUT \
+        $WITH \
         install \
 
     fail_panic "Couldn't build Boost $BOOST_VERSION $ABI libraries"
@@ -980,11 +976,11 @@ if [ -n "$PACKAGE_DIR" ] ; then
     fi
 fi
 
-if [ -z "$OPTION_BUILD_DIR" ]; then
-    log "Cleaning up..."
-    rm -rf $BUILD_DIR
-else
+#if [ -z "$OPTION_BUILD_DIR" ]; then
+#    log "Cleaning up..."
+#    rm -rf $BUILD_DIR
+#else
     log "Don't forget to cleanup: $BUILD_DIR"
-fi
+#fi
 
 log "Done!"
