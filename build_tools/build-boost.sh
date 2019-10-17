@@ -471,8 +471,8 @@ build_boost_for_abi ()
     run mkdir $TMPTARGETTCDIR
     fail_panic "Couldn't create temporary directory for target $ABI toolchain wrappers"
 
-    local SYSROOT=$NDK_DIR/platforms/android-$APILEVEL/arch-$ARCH
-    local LIBCRYSTAX=$NDK_DIR/$CRYSTAX_SUBDIR
+#    local SYSROOT=$NDK_DIR/platforms/android-$APILEVEL/arch-$ARCH
+#    local LIBCRYSTAX=$NDK_DIR/$CRYSTAX_SUBDIR
 
     local ICU_CFLAGS ICU_LDFLAGS
     if [ -n "$ICU_VERSION" ]; then
