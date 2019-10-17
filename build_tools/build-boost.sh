@@ -199,61 +199,7 @@ mktool()
         fail_panic "Could not chmod +x $tool"
     done
 }
-#-------------------------------------------------------------------
-# ndk 16+ BEGIN
-#--------------
-# my_sys_inc()
-# {
-#     echo "$NDK_DIR/sysroot/usr/include"
-# }
-#----------------------------------------
-my_triple_for()
-{
-    ABI=$1
-    case $ABI in
-    
-        armeabi*)
-            echo "arm-linux-androideabi"
-            ;;
-        arm64-v8a)
-            echo "aarch64-linux-android"
-            ;;
-        x86)
-            echo "i686-linux-android"
-            ;;
 
-        x86_64)
-            echo "x86_64-linux-android"
-            ;;
-
-       mips)
-            echo "mipsel-linux-android"
-            ;;
-        mips64)
-            echo "mips64el-linux-android"
-            ;;
-        *)
-            echo "ERROR: Unknown ABI: $ABI" 1>&2
-            #exit 1
-    esac
-}
-#---------------------
-# my_abi_inc()
-# {
-#     echo $(my_sys_inc)"/"$(my_triple_for $1)
-# }
-#---------------------
-# my_abi_inc_flag()
-# {
-#     echo "-I"$(my_abi_inc $1)
-# }
-# #---------------------
-# my_sys_inc_flag()
-# {
-#     echo "-I"$(my_sys_inc)
-# }
-#---------------------
-# ndk 16+ END
 #-------------------------------------------------------------------
 # $1: ABI
 # $2: build directory
@@ -471,8 +417,6 @@ build_boost_for_abi ()
     run mkdir $TMPTARGETTCDIR
     fail_panic "Couldn't create temporary directory for target $ABI toolchain wrappers"
 
-#    local SYSROOT=$NDK_DIR/platforms/android-$APILEVEL/arch-$ARCH
-#    local LIBCRYSTAX=$NDK_DIR/$CRYSTAX_SUBDIR
 
     local ICU_CFLAGS ICU_LDFLAGS
     if [ -n "$ICU_VERSION" ]; then
@@ -516,15 +460,7 @@ build_boost_for_abi ()
             exit 1
     esac
 #---------------
-# ndk 16+ BEGIN
-#---------------
- #   LIBSTDCXX_CFLAGS="$LIBSTDCXX_CFLAGS $(my_sys_inc_flag)"
- #   LIBSTDCXX_CFLAGS="$LIBSTDCXX_CFLAGS $(my_abi_inc_flag $ABI)"
-#---------------
-# ndk 16+ END
-#---------------
-    
-#    FLAGS="$FLAGS --sysroot=$SYSROOT"
+
     FLAGS="$FLAGS -fPIC"
 
     mktool $TMPTARGETTCDIR/$CXXNAME <<EOF
@@ -839,133 +775,7 @@ persist_ndk_version
 
 #########################################################################################
 
-# Generate Android.mk
-# log "Generating $BOOST_DSTDIR/Android.mk"
-# {
-#     echo "# WARNING!!! THIS IS AUTO-GENERATED FILE!!! DO NOT EDIT IT MANUALLY!!!"
-#     echo ""
-#     cat $NDK_DIR/$CRYSTAX_SUBDIR/LICENSE | sed 's,^,# ,' | sed 's,^#\s*$,#,'
-#     echo ""
-#     echo 'LOCAL_PATH := $(call my-dir)'
-#     echo ''
-#     echo 'ifeq (,$(filter gnustl_% c++_%,$(APP_STL)))'
-#     echo '$(error $(strip \'
-#     echo '    We do not support APP_STL '"'"'$(APP_STL)'"'"' for Boost libraries! \'
-#     echo '    Please use either "gnustl_shared", "gnustl_static", "c++_shared" or "c++_static". \'
-#     echo '))'
-#     echo 'endif'
-#     echo ''
-#     echo '__boost_libstdcxx_subdir := $(strip \'
-#     echo '    $(strip $(if $(filter c++_%,$(APP_STL)),\'
-#     echo '        llvm,\'
-#     echo '        gnu\'
-#     echo '    ))-$(strip $(if $(filter c++_%,$(APP_STL)),\'
-#     echo '        $(if $(filter clang%,$(NDK_TOOLCHAIN_VERSION)),$(patsubst clang%,%,$(NDK_TOOLCHAIN_VERSION)),'$DEFAULT_LLVM_VERSION'),\'
-#     echo '        $(if $(filter clang%,$(NDK_TOOLCHAIN_VERSION)),'$DEFAULT_GCC_VERSION',$(NDK_TOOLCHAIN_VERSION))\'
-#     echo '    ))\'
-#     echo ')'
-# 
-#     for LIBTYPE in static shared; do
-#         case $LIBTYPE in
-#             static)
-#                 SUFFIX=a
-#                 ;;
-#             shared)
-#                 SUFFIX=so
-#                 ;;
-#             *)
-#                 echo "ERROR: Wrong LIBTYPE: '$LIBTYPE' (must be either 'static' or 'shared')" 1>&2
-#                 exit 1
-#         esac
-#         BOOST_ABIS=$(ls -1 $BOOST_DSTDIR/libs)
-#         for BOOST_ABI in $BOOST_ABIS; do
-#             case $BOOST_ABI in
-#                 armeabi*)
-#                     OBJDUMP=$NDK_DIR/toolchains/arm-linux-androideabi-$DEFAULT_GCC_VERSION/prebuilt/$HOST_TAG/bin/arm-linux-androideabi-objdump
-#                     ;;
-#                 arm64*)
-#                     OBJDUMP=$NDK_DIR/toolchains/aarch64-linux-android-$DEFAULT_GCC_VERSION/prebuilt/$HOST_TAG/bin/aarch64-linux-android-objdump
-#                     ;;
-#                 x86)
-#                     OBJDUMP=$NDK_DIR/toolchains/x86-$DEFAULT_GCC_VERSION/prebuilt/$HOST_TAG/bin/i686-linux-android-objdump
-#                     ;;
-#                 x86_64)
-#                     OBJDUMP=$NDK_DIR/toolchains/x86_64-$DEFAULT_GCC_VERSION/prebuilt/$HOST_TAG/bin/x86_64-linux-android-objdump
-#                     ;;
-#                 mips)
-#                     OBJDUMP=$NDK_DIR/toolchains/mipsel-linux-android-$DEFAULT_GCC_VERSION/prebuilt/$HOST_TAG/bin/mipsel-linux-android-objdump
-#                     ;;
-#                 mips64)
-#                     OBJDUMP=$NDK_DIR/toolchains/mips64el-linux-android-$DEFAULT_GCC_VERSION/prebuilt/$HOST_TAG/bin/mips64el-linux-android-objdump
-#                     ;;
-#                 *)
-#                     echo "ERROR: Unknown ABI: '$BOOST_ABI'" 1>&2
-#                     exit 1
-#             esac
-# 
-#             if [ ! -e $OBJDUMP ]; then
-#                 echo "ERROR: Can't find $BOOST_ABI objdump: $OBJDUMP" 1>&2
-#                 exit 1
-#             fi
-# 
-#             find $BOOST_DSTDIR/libs/$BOOST_ABI/gnu-$DEFAULT_GCC_VERSION -name "libboost_*.$SUFFIX" -exec basename '{}' \; | \
-#                 sed "s,^lib\\([^\\.]*\\)\\.${SUFFIX}$,\\1," | sort | uniq | \
-#             {
-#                 while read LIB; do
-# 
-#                     DEPS=$($OBJDUMP -p $BOOST_DSTDIR/libs/$BOOST_ABI/gnu-$DEFAULT_GCC_VERSION/lib${LIB}.so 2>/dev/null | grep "^ *NEEDED\>" | awk '{print $2}' | \
-#                         grep -v "^lib\(c\|dl\|crystax\|stdc++\|gnustl_shared\|c++_shared\)\.so$" | sed 's,^lib\([^\.]*\)\.so$,\1,')
-# 
-#                     SKIP=no
-#                     case $LIB in
-#                         boost_context|boost_coroutine|boost_coroutine2)
-#                             case $BOOST_ABI in
-#                                 arm64*)
-#                                     if [ $BOOST_MAJOR_VERSION -lt 1 -o \( $BOOST_MAJOR_VERSION -eq 1 -a $BOOST_MINOR_VERSION -le 57 \) ]; then
-#                                         SKIP=yes
-#                                     fi
-#                                     ;;
-#                                 mips64)
-#                                     if [ $BOOST_MAJOR_VERSION -lt 1 -o \( $BOOST_MAJOR_VERSION -eq 1 -a $BOOST_MINOR_VERSION -le 60 \) ]; then
-#                                         SKIP=yes
-#                                     fi
-#                                     ;;
-#                             esac
-#                             ;;
-#                     esac
-# 
-#                     if [ "$SKIP" = "yes" ]; then
-#                         continue
-#                     fi
-# 
-#                     echo ''
-#                     echo 'ifneq (,$(filter '$BOOST_ABI',$(TARGET_ARCH_ABI)))'
-#                     echo 'include $(CLEAR_VARS)'
-#                     echo 'LOCAL_MODULE := '$LIB'_'$LIBTYPE
-#                     echo 'LOCAL_SRC_FILES := libs/$(TARGET_ARCH_ABI)/$(__boost_libstdcxx_subdir)/lib'$LIB'.'$SUFFIX
-#                     echo 'LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include'
-#                     echo 'ifneq (,$(filter clang%,$(NDK_TOOLCHAIN_VERSION)))'
-#                     echo 'LOCAL_EXPORT_LDLIBS := -latomic'
-#                     echo 'endif'
-#                     for d in $DEPS; do
-#                         if [ "$LIBTYPE" = "static" ]; then
-#                             echo "LOCAL_STATIC_LIBRARIES += ${d}_static"
-#                         else
-#                             echo "LOCAL_SHARED_LIBRARIES += ${d}_shared"
-#                         fi
-#                     done
-#                     echo 'include $(PREBUILT_'$(echo $LIBTYPE | tr '[a-z]' '[A-Z]')'_LIBRARY)'
-#                     echo 'endif'
-#                 done
-#             }
-#         done
-#     done
-# 
-#     if [ -n "$ICU_VERSION" ]; then
-#         echo ''
-#         echo "\$(call import-module,icu/$ICU_VERSION)"
-#     fi
-# } | cat >$BOOST_DSTDIR/Android.mk
+
 
 # If needed, package files into tarballs
 if [ -n "$PACKAGE_DIR" ] ; then
@@ -983,11 +793,11 @@ if [ -n "$PACKAGE_DIR" ] ; then
     fi
 fi
 
-#if [ -z "$OPTION_BUILD_DIR" ]; then
-#    log "Cleaning up..."
-#    rm -rf $BUILD_DIR
-#else
+if [ -z "$OPTION_BUILD_DIR" ]; then
+    log "Cleaning up..."
+    rm -rf $BUILD_DIR
+else
     log "Don't forget to cleanup: $BUILD_DIR"
-#fi
+fi
 
 log "Done!"
