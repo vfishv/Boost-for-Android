@@ -1,12 +1,14 @@
 # Copyright (c) 2019 Declan Moran (www.silverglint.com)
 
 # Extract boost (src) archive to a directory of the form "major.minor.patch" 
-# so that the dir name ~  boost version (eg "1.69.0")
-#---------------------------------------------------------------------------------
-# Example script. Modify the variables below as appropriate for your local setup.
-#---------------------------------------------------------------------------------
+# such that eg ...../1.71.0/bootstrap.sh, etc
 
 
+
+#--------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------
+# Modify the variables below as appropriate for your local setup.
+#----------------------------------------------------------------
 
 
 
@@ -16,7 +18,6 @@ BOOST_SRC_DIR=/home/declan/zone/low/Boost-for-Android/down/boost
 
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
-#BOOST_VERSION=1.64.0
 BOOST_VERSION=1.71.0
 
 #------------------------------------------------------------------------------------------
@@ -24,9 +25,9 @@ BOOST_VERSION=1.71.0
 export ANDROID_NDK_ROOT=/home/declan/zone/low/Boost-for-Android/down/ndk/20
 
 #------------------------------------------------------------------------------------------
-# Modify if desired
+# Modify  (optional)
 # log file where build messages will be stored
-logFile=build_out.txt
+logFile=build_log.txt
 
 
 
@@ -35,17 +36,19 @@ logFile=build_out.txt
 
 ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #ABIS="arm64-v8a"
-
-# whether to build shared or static libraries (or both)          
-# possible values:   {"shared", "static", "shared,static"}
+  
+# can be "shared" or "static" or "shared static" (both)
 # LINKAGE="shared"               
 LINKAGE="shared"
 
 
+
+
+
 #--------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------
-# Dont modify  - the actual call
-#-------------------------------
+# Do -NOT- modify  below here. 
+#-----------------------------
 
 # empty logFile 
 if [ -f "$logFile" ]  
