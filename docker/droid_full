@@ -1,0 +1,226 @@
+# Version: 1.2
+
+# Dockerfile for building boost for android
+# https://github.com/dec1/Boost-for-Android
+# creates docker container with all tools, libraries and sources required to build boost for android.
+
+# Author: Declan Moran
+# www.silverglint.com
+
+
+# Usage: 
+#------
+# > git clone https://github.com/dec1/boost-for-android
+# > cd boost-for-android
+#
+
+    # (1) Build Image
+    #-----------------
+    # build docker image "my_img_droid" from the dockerfile in "docker" dir
+    # > docker build -t my_img_droid ./docker
+
+        # Build arguemnts
+        # -----------------
+        # override any default build arguments (ARGs) by passing via "-build-arg key=val"
+        # eg 
+        # 
+        
+        
+        # Proxy (of host)
+        # -----
+        # > docker build  \
+        #       --build-arg PROXY_HTTP_HOST=10.110.15.6  \
+        #       --build-arg PROXY_HTTP_PORT=8080  \
+        #       --build-arg PROXY_HTTPS_HOST=10.110.15.6  \
+        #       --build-arg PROXY_HTTPS_PORT=8080   \
+        #   -t my_img_droid ./docker
+                
+                
+                # Note : In order for docker to access network when host is behind a proxy ~/.docker/config.json should contain the relevant proxy settings. eg
+                # 
+                # {....
+                # 	"proxies": {
+                # 		"default": {
+                # 			"httpProxy": "http://10.110.15.6:8080",
+                # 			"httpsProxy": "https://10.110.15.6:8080",
+                # 			"noProxy": "localhost,127.0.0.1"
+                # 		}
+                # 	}
+                # }
+
+        # Sdk version (onyl needed to build sample app in docker)
+        # the file path for the sdk tools download (from eg https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip)
+        # --build-arg SDK_FILE=sdk-tools-linux-4333796.zip
+        
+        
+        # the sdk plaform to use - should match that used in example_app (app/build.gradle)
+        # https://developer.android.com/guide/topics/manifest/uses-sdk-element
+        # --build-arg ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
+        
+
+    # (3) Download boost src and ndk to current dir (so can share with docker container .. see below)
+    #-------------------------------
+    # eg 
+    #   ./down/boost_src/1.69.0 
+    #   ./down/ndk/19c
+    
+    # (2) Run Container
+    #-------------------
+    # run docker container "my_ctr_droid" from this image, mounting the current dir as /home/bfa (thus also boost src and ndk), 
+    # (Need to pass absolute host paths to mount volume- hence "pwd")
+    # 
+    # > docker run -v $(pwd):/home/bfa -it --entrypoint=/bin/bash --name my_ctr_droid my_img_droid 
+    
+
+
+    # (3) Build boost and app inside container
+    # ----------------------------------------
+    # Now inside docker container
+    # $ cd /home/bfa
+    #
+    # Modify ./do_docker.sh (on host), to match the boost and android ndk versions/paths in the "Configure here" section below
+    # Build boost from running docker container. 
+    # $./do_docker.sh
+    #
+    
+        
+    # Exit container, when build is finsihed,
+    # $ exit
+    #
+    # "./build" dir contains required build, but owned by root. chown to your username/group
+    # > sudo chown -R <username>:<group> ./build
+    # > sudo chown -R <username>:<group> ./build_tmp
+    # 
+
+
+
+
+
+
+
+FROM amd64/ubuntu:18.04
+ 
+ 
+## --------------------------------------------------------------------
+##              Configure here
+# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Here you can speciofy exactly what boost, android ndk (and sdk) version you want to use.
+
+
+# (1) Boost Src
+ARG BOOST_SRC_DIR=Boost-For-Android/boost_src/1.69.0
+
+
+# (2) Android Ndk
+ARG NDK_DIR=/home/android/ndk
+
+
+# (3) Proxy
+# ---------
+# Any proxy settings (necessary if host is behind a proxy) for sdk_manager and gradle.
+# Note : Aditionally ~/.docker/config.json on host must have relevant proxy settings, for a containre to access network
+
+ARG PROXY_HTTP_HOST=""
+ARG PROXY_HTTP_PORT=""
+ARG PROXY_HTTPS_HOST=""
+ARG PROXY_HTTPS_PORT=""
+
+
+#--------------------------------------------------
+# Sdk
+
+ARG ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
+
+# base path for sdk
+ARG ANDROID_HOME=/home/android
+
+# https://developer.android.com/studio#downloads
+ARG SDK_URL_BASE=https://dl.google.com/android/repository
+ARG SDK_FILE=sdk-tools-linux-4333796.zip
+# sdk will be instalkled to $ANDROID_HOME
+
+
+# ---------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+RUN apt-get update
+RUN apt-get -y dist-upgrade
+
+
+# for downloading archives
+RUN apt-get -y install wget
+
+# for unzipping downloaded android archives
+RUN apt-get -y install zip 
+
+RUN apt-get -y install openjdk-8-jdk
+RUN apt-get -y install lib32z1
+
+
+# need this this to install some (32 bit) prerequisites for android builds 
+RUN dpkg --add-architecture i386
+RUN apt-get update
+RUN apt-get -y dist-upgrade
+RUN apt-get install -y  libc6:i386 libncurses5:i386 libstdc++6:i386 libbz2-1.0:i386
+
+
+# need c compiler to set up create boost build system (before building boost with it and android toolchain)
+RUN apt-get -y install build-essential 
+RUN apt-get -y install libc6-dev-i386
+RUN apt-get -y install clang
+
+
+#--------------------------------------
+
+
+WORKDIR ${ANDROID_HOME}
+
+
+# SDK
+# ----
+# download android sdk command line tools
+RUN wget ${SDK_URL_BASE}/$SDK_FILE
+RUN unzip $SDK_FILE 
+
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
+
+
+# RUN yes | sdkmanager ${PROXY_CONFIG_STR} --licenses
+
+RUN  if [ ! -z "$PROXY_HTTP_HOST" ] ;\
+        then PROXY_CONFIG_STR="--proxy=http --proxy_host="$PROXY_HTTP_HOST" --proxy_port="$PROXY_HTTP_PORT ;\
+        else PROXY_CONFIG_STR="" ;\
+     fi ;\
+     \
+     yes | sdkmanager ${PROXY_CONFIG_STR} $ANDROID_SDK_PLATFORM_VERS 
+
+
+
+
+# -------------------------------------------
+# enable gradle to get through proxy (when building example_app)
+
+
+
+# Gradle needs to know how to deal with any proxy
+RUN if [ ! -z "$PROXY_HTTP_HOST" ] ;\
+        then echo "systemProp.http.proxyHost="$PROXY_HTTP_HOST    >> ~/gradle.properties ;\
+    fi 
+     
+RUN if [ ! -z "$PROXY_HTTP_PORT" ] ;\
+        then echo "systemProp.http.proxyPort="$PROXY_HTTP_PORT    >> ~/gradle.properties ;\
+    fi 
+     
+     
+RUN if [ ! -z "$PROXY_HTTPS_HOST" ] ;\
+        then echo "systemProp.https.proxyHost="$PROXY_HTTPS_HOST    >> ~/gradle.properties ;\
+    fi 
+     
+RUN if [ ! -z "$PROXY_HTTPS_PORT" ] ;\
+        then echo "systemProp.https.proxyPort="$PROXY_HTTPS_PORT    >> ~/gradle.properties ;\
+    fi 
+     
+    
+
+
