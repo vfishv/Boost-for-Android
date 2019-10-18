@@ -20,12 +20,16 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
 
     string Str = "Hello from C++";
 
+
+
     //-------------------------------------
     boost::chrono::system_clock::time_point p  = boost::chrono::system_clock::now();
     std::time_t t = boost::chrono::system_clock::to_time_t(p);
 
     char buffer[26];
     ctime_r(&t, buffer);
+
+
 
     //  std::string tst = std::to_string(3);
 
@@ -39,6 +43,25 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
     string Ver_Pat = boost::lexical_cast<string>(ver_pat);
 
     Str += "\n Boost version: " + Ver_Maj + "." + Ver_Min + "." + Ver_Pat + "\n";
+
+
+    #if defined(MY_HOLA)
+        Str += "hola .. \n";
+    #endif
+
+
+    #if defined(MY_BLA)
+        Str += "bla.. \n";
+    #endif
+
+
+    #if defined(__ANDROID_API__)
+        Str += "android_api.. " + std::to_string(__ANDROID_API__) + " \n " ;
+        Str += "\n";
+    #endif
+
+
+
     Str += "... built with NDK version: " + string(BOOST_BUILT_WITH_NDK_VERSION) + "\n";
     Str += "... says time is " + std::string(buffer) + "\n\n";
     //--------------------------------------------

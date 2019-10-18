@@ -79,6 +79,10 @@ LOWEST_NDK_API_LEVEL=16   # this should be the lowest platform available in the 
                           # eg $NDK_DIR/platforms/android-16/ -> 16 currently
 #                         # Will need to increase this at some future stage if/when ndk drops platform android-16 -> would be better to automatically detect this.
 
+__ANDROID_API__=$LOWEST_NDK_API_LEVEL # some code (including boost internal?) expects the (preprocessor (C) define) of __ANDROID_API__ to identify with which abi the android (ndk) library was built
+                                      # https://github.com/dec1/Boost-for-Android/issues/16
+                                      
+
 # override "sources/boost" in dev-defaults.sh 
 BOOST_SUBDIR=boost
 
@@ -117,6 +121,7 @@ extract_parameters "$@"
 
 
 STDLIBS="llvm"
+
 
 
 
@@ -217,7 +222,7 @@ build_boost_for_abi ()
 
     local APILEVEL=$LOWEST_NDK_API_LEVEL   
     if [ ${ABI%%64*} != ${ABI} ]; then
-        APILEVEL=21
+        APILEVEL=$(($LOWEST_NDK_API_LEVEL>21 ? $LOWEST_NDK_API_LEVEL : 21))  # MAX(LOWEST_NDK_API_LEVEL, 21)
     fi
 
     rm -Rf $BUILDDIR
@@ -403,6 +408,7 @@ build_boost_for_abi ()
 
     {
          echo "" # "using mpi ;"
+         # echo "<define>MY_BLA ;"
     } | cat >user-config.jam
     fail_panic "Could not create user-config.jam"
 
@@ -617,11 +623,12 @@ EOF
         address-model=$BJAMADDRMODEL \
         architecture=$BJAMARCH \
         abi=$BJAMABI \
+        define=__ANDROID_API__=$APILEVEL \
         --user-config=user-config.jam \
         --layout=system \
         --prefix=$PREFIX \
         --build-dir=$BUILDDIR/build \
-        $WITHOUT \
+        $WITH \
         install \
 
     fail_panic "Couldn't build Boost $BOOST_VERSION $ABI libraries"
@@ -787,7 +794,7 @@ persist_ndk_version
 
 if [ -z "$OPTION_BUILD_DIR" ]; then
     log "Cleaning up..."
-    rm -rf $BUILD_DIR
+    # rm -rf $BUILD_DIR
 else
     log "Don't forget to cleanup: $BUILD_DIR"
 fi
