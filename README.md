@@ -2,13 +2,11 @@
 Build and/or simply download the Boost C++ Libraries for the Android platform, with Google's Ndk.
 
 The [Boost C++ Libraries](http://www.boost.org/), are possibly *the* most popular and generally useful c++ libraries. It would be nice to be able to use them when developing (native c++ or hybrid java/c++ with Google's [Ndk](https://developer.android.com/ndk/)) apps and/or libraries for Android devices.
-The Boost libraries are written to be cross platform, and are available in source code format. However, building the libraries for a given target platform is not a very simple or cross platform experience, at least in practice. Building the Boost libraries for Android can be very difficult and time consuming. This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android (abstracting away all the details of the underlying custom boost build system), and even providing standard prebuilt binaries to get you started fast.
+The Boost libraries are written to be cross platform, and are available in source code format. However, building the libraries for a given target platform like Android can be very difficult and time consuming. (In particular, building **arm64_v8a** shared libraries that an example that an application can actually load). This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android (abstracting away all the details of the underlying custom boost build system, and traget architecture differences), and even providing standard prebuilt binaries to get you started fast.
 
-Tested with **Boost 1.69.0** and **Google's Ndk 19c**  (current versions as of March 2019).
+Tested with **Boost 1.71.0** and **Google's Ndk 20**  (current versions as of October 2019).
 
-Building on a Linux/Docker machine is officially supported. Mac and Windows should work fine too but the details of setting up the relevant environments (eg. Cygwin or Homebrew) is beyond the scope of what this project tries to do.
-
-If you want to use an operating system other than Linux/Docker when building, the easiest option is to use virtual machines. On your OS of choice install VirtualBox, and with it create a Linux virtual machine with where you do the building. No matter what OS you use to build with, the resulting binaries can then be copied to any other, and used from then on as if you had built on there to start with (theyre cross compiled *for* android and have no memory of *where* they were built).
+You can build directly on a Linux machine, or indirectly on any of Linux, Windows, MacOS via [docker](https://www.docker.com) (or of course virtual machines). _No matter what OS you use to build with, the resulting binaries can then be copied to any other, and used from then on as if you had built on there to start with (theyre cross compiled *for* android and have no memory of *where* they were built_).
 
 Works with **clang** (llvm) 
 *- as of ndk 16 google no longer supports gcc*.
@@ -24,19 +22,26 @@ You can just download a current set of standard prebuilt binaries [here](https:/
 
 ## Build Yourself
 
-### Docker
-The easiest way to build is to use [docker](https://www.docker.com) with the [Dockerflile](./docker/Dockerfile) provided. This way you need not download or install anything (including android studio, ndk, boost source code ) on your host machine (except docker itself). See the top of the Dockerfile for instructions.
+### Build using Docker
+The easiest and most flexible way to build is to use [docker](https://www.docker.com). 
+This way you need not need to install any build tools or other prerequisites, and can use any host operating system you wish that has docker installed. 
 
-### Build on you linux host
-* For prerequisites  also see the [Dockerflile](./docker/Dockerfile) (even though the rest of these instructions don't use docker)
+See [docker_readme](./docker/docker_readme.md) for instructions.
+
+### Build directly on your Linux machine
+https://github.com/dec1/Boost-for-Android/blob/b439cd36ef83f59b83b4638d7bbfe86a981cad58/docker/droid_base#L18
+
+* For prerequisites see [Dockerflile](./docker/droid_base#L18) (even though the rest of these instructions don't use docker)
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
-  eg */home/declan/Documents/zone/mid/lib/boost/1.69.0*
+  eg */home/declan/Documents/zone/mid/lib/boost/1.71.0* 
+  If necessary, fix any bugs in boost  (eg for [1.71.0](https://github.com/boostorg/build/issues/385)).
+
   
-  *__Note__:* After the extarction *..../boost/1.69.0* should then be the direct parent dir of "bootstrap.sh", "boost-build.jam" etc
+  *__Note__:* After the extarction *..../boost/1.71.0* should then be the direct parent dir of "bootstrap.sh", "boost-build.jam" etc
 
 
 ```
-> ls /home/declan/Documents/zone/mid/lib/boost/1.69.0
+> ls /home/declan/Documents/zone/mid/lib/boost/1.71.0
 boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 ``` 
 
@@ -47,20 +52,16 @@ boost  boost-build.jam  boostcpp.jam  boost.css  boost.png  ....
 ``` 
 
 
-* Modify the paths (where the ndk is) and variables (which abis you want to build for, which compiler to use etc) in *doIt.sh*, and execute it. If the build succeeds then the boost binaries should then be available in the dir *boost_for_android/build*
+* Modify the paths (where the ndk is) and variables (which abis you want to build for) in *do.sh*, and execute it. If the build succeeds then the boost binaries should then be available in the dir *boost_for_android/build*
 
 ```
 > cd boost_for_android
-> ./doIt.sh
+> ./do.sh
 ```
 
 
 
 * *__Note__:* If for some reason the build fails you may want to manually clear the */tmp/ndk-your_username* dir (which gets cleared automatically after a successful build).
-
-  *__Issues__:* 
-  - If you are using ndk 18 and boost <= 1.68.0, you may have to modify the boost source code according to [this](https://github.com/boostorg/asio/pull/91). Boost (<= 1.68.0) doesn't support clang 7 which is the default compiler with ndk 18. This workaround should solve the problem until boost adds support for clang 7, which it seems to have done in 1.69.0.
-  - There seems to be a bug in boost 1.70.0. Workaround here: https://github.com/boostorg/boost/issues/258
 
 
 
@@ -79,7 +80,7 @@ want to use these. To see which of the libraries do require building you can swi
 > ./bootstrap.sh --show-libraries 
 ```
 
-which for example with boost 1.69 produces the output:
+which for example with boost 1.71 produces the output:
 
 ```
 The following Boost libraries have portions that require a separate build
@@ -99,6 +100,7 @@ The Boost libraries requiring separate building and installation are:
     - filesystem
     - graph
     - graph_parallel
+    - headers
     - iostreams
     - locale
     - log
@@ -116,6 +118,7 @@ The Boost libraries requiring separate building and installation are:
     - timer
     - type_erasure
     - wave
+
 ```
 ## Crystax
 [Crystax](https://www.crystax.net/) is an excellent alternative to Google's Ndk. It ships with prebuilt boost binaries, and dedicated build scripts.
@@ -124,4 +127,3 @@ These binaries will however not work with Goolge's Ndk. If for some reason you c
 ## Contributions
 - Many thanks to [crystax](https://github.com/crystax/android-platform-ndk/tree/master/build/tools) for their version of *build-boost.sh* which I adapted to make it work with the google ndk.
 - Thanks to [google](https://android.googlesource.com/platform/ndk/+/master/build/tools) for the  files *dev-defaults.sh, ndk-common.sh, prebuilt-common.sh*.
-- Thanks to [Ryan Pavlik](https://github.com/sensics/Boost-for-Android) for his fork with some improvements.
