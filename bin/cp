@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ 
+run()
+{
+   
+   
+    echo "## COMMAND: cp @"
+   
+    echo "## COMMAND: cp @" >> run_log.txt
+    
+    PARAMS="${@//.so.1.71.0/.so}"
+    
+    
+    PARAMS="${@//.so.1.71.0/.so}"
+    
+   
+    
+    exec cp $PARAMS
+}
+
+
+
+
+# echo "calling run() with :" $@
+run "$@" 

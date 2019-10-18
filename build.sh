@@ -256,7 +256,7 @@ done # for LINKAGE in $LINKAGE_LIST
 
 persist_ndk_version
 
-fix_version_suffices
+# fix_version_suffices
 
 echo "built boost to "  ${PREFIX_DIR}
 

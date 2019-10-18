@@ -1,3 +1,5 @@
+#!/bin/bash
+
  
 run()
 {
@@ -7,11 +9,11 @@ run()
    
     echo "## COMMAND: aarch64-linux-android21-clang++ $@" >> run_log.txt
     
-     PARAMS="${@//.so.1.71.0/.so}"
+    PARAMS="${@//.so.1.71.0/.so}"
     
     echo "#- PARAMS: aarch64-linux-android21-clang++ $PARAMS"      
     
-    exec ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang++ $@
+    exec ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang++ $PARAMS
 }
 
 
