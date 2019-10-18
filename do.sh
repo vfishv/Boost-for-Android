@@ -14,7 +14,7 @@
 
 # Specify the path to boost source code dir 
 #BOOST_SRC_DIR=/home/declan/Documents/zone/low/Boost-for-Android/src
-BOOST_SRC_DIR=/home/declan/zone/low/Boost-for-Android/down/boost
+BOOST_SRC_DIR=/home/declan/zone/low/boost/Boost-for-Android/down/boost
 
 #------------------------------------------------------------------------------------------
 # Specify the version of boost youre building
@@ -22,7 +22,7 @@ BOOST_VERSION=1.71.0
 
 #------------------------------------------------------------------------------------------
 # Specify path to the (Google) Ndk  (by default  downloded to "..sdk/ndk-bundle" by android studio)
-export ANDROID_NDK_ROOT=/home/declan/zone/low/Boost-for-Android/down/ndk/20
+export ANDROID_NDK_ROOT=/home/declan/zone/low/boost/Boost-for-Android/down/ndk/20
 
 #------------------------------------------------------------------------------------------
 # Modify  (optional)
@@ -37,9 +37,9 @@ logFile=build_log.txt
 ABIS="armeabi-v7a,arm64-v8a,x86,x86_64"
 #ABIS="arm64-v8a"
   
-# can be "shared" or "static" or "shared static" (both)
+# can be "shared" or "static" or "shared,static" (both)
 # LINKAGE="shared"               
-LINKAGE="shared"
+LINKAGE="shared,static"
 
 
 
