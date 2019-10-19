@@ -12,51 +12,23 @@ using clang : arm64v8a
 :
 aarch64-linux-android21-clang++ 
 :
+
 ;
 
 # --------------------------------------------------------------------
 
 using clang : armeabiv7a
 :
-$(ndk_bin_dir)/armv7a-linux-androideabi16-clang++ 
+armv7a-linux-androideabi16-clang++ 
 :
-<archiver>$(ndk_bin_dir)/llvm-ar
-<compileflags>-fPIC
-<compileflags>-ffunction-sections
-<compileflags>-fdata-sections
-<compileflags>-funwind-tables
-<compileflags>-fstack-protector-strong
-<compileflags>-no-canonical-prefixes
-<compileflags>-Wformat
-<compileflags>-Werror=format-security
-<compileflags>-frtti
-<compileflags>-fexceptions
-<compileflags>-DNDEBUG
-<compileflags>-g
-<compileflags>-Oz
-<compileflags>-mthumb
-;
 
+;
 # --------------------------------------------------------------------
 
 using clang : x86
 :
-$(ndk_bin_dir)/i686-linux-android16-clang++
+i686-linux-android16-clang++
 :
-<archiver>$(ndk_bin_dir)/llvm-ar
-<compileflags>-fPIC
-<compileflags>-ffunction-sections
-<compileflags>-fdata-sections
-<compileflags>-funwind-tables
-<compileflags>-fstack-protector-strong
-<compileflags>-no-canonical-prefixes
-<compileflags>-Wformat
-<compileflags>-Werror=format-security
-<compileflags>-frtti
-<compileflags>-fexceptions
-<compileflags>-DNDEBUG
-<compileflags>-g
-<compileflags>-Oz
 
 ;
 
@@ -64,21 +36,7 @@ $(ndk_bin_dir)/i686-linux-android16-clang++
 
 using clang : x8664
 :
-$(ndk_bin_dir)/x86_64-linux-android21-clang++ 
+x86_64-linux-android21-clang++ 
 :
-<archiver>$(ndk_bin_dir)/llvm-ar
-<compileflags>-fPIC
-<compileflags>-ffunction-sections
-<compileflags>-fdata-sections
-<compileflags>-funwind-tables
-<compileflags>-fstack-protector-strong
-<compileflags>-no-canonical-prefixes
-<compileflags>-Wformat
-<compileflags>-Werror=format-security
-<compileflags>-frtti
-<compileflags>-fexceptions
-<compileflags>-DNDEBUG
-<compileflags>-g
-<compileflags>-Oz
 
 ;
