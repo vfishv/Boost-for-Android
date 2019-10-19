@@ -778,7 +778,7 @@ persist_ndk_version
 
 if [ -z "$OPTION_BUILD_DIR" ]; then
     log "Cleaning up..."
-    # rm -rf $BUILD_DIR
+    rm -rf $BUILD_DIR
 else
     log "Don't forget to cleanup: $BUILD_DIR"
 fi
