@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "in strip...." 
+exec ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/${TOOL_TRIPLE_FOR_ABI}-strip "$@"
+echo "in strip...." 

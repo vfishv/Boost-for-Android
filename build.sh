@@ -27,8 +27,11 @@ WITHOUT_LIBRARIES=--without-python
 WITH_LIBRARIES="--with-chrono --with-system"
 
 
+
+
+
 #----------------------------------------------------------------------------------
-# map ARCH to toolset name (following "using clang :") used in user-config.jam
+# map ABI to toolset name (following "using clang :") used in user-config.jam
 toolset_for_abi_name() {
 
 
@@ -45,6 +48,44 @@ toolset_for_abi_name() {
         ;;
         
     esac
+}
+#----------------------------------------------------------------------------------
+# map abi to {NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/*-clang++
+clang_triple_for_abi_name() {
+
+    local abi_name=$1
+    
+    case "$abi_name" in
+        arm64-v8a)      echo "aarch64-linux-android21"
+        ;;
+        armeabi-v7a)    echo "armv7a-linux-androideabi16"
+        ;;
+        x86)            echo "i686-linux-android16"
+        ;;
+        x86_64)         echo "x86_64-linux-android21"
+        ;;
+        
+    esac
+    
+}
+#----------------------------------------------------------------------------------
+# map abi to {NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/*-ranlib etc
+tool_triple_for_abi_name() {
+
+    local abi_name=$1
+    
+    case "$abi_name" in
+        arm64-v8a)      echo "aarch64-linux-android"
+        ;;
+        armeabi-v7a)    echo "arm-linux-androideabi"
+        ;;
+        x86)            echo "i686-linux-android"
+        ;;
+        x86_64)         echo "x86_64-linux-android"
+        ;;
+        
+    esac
+    
 }
 #----------------------------------------------------------------------------------
 abi_for_abi_name() {
@@ -102,6 +143,23 @@ address_model_for_abi_name() {
     esac
     
 }
+# #----------------------------------------------
+# native_api_version_for_abi_name() {
+# 
+#     local abi_name=$1
+#     
+#     case "$abi_name" in
+#         armeabi-v7a|x86)
+#             echo "16"
+#             ;;
+#         arm64-v8a|x86_64)
+#             echo "21"
+#             ;;
+#         *)
+#             echo "ERROR: Unknown ABI : $ABI" 1>&2
+#             exit 1
+#     esac
+# }    
 #----------------------------------------------------------------------------------
 # write the ndk version to a header file for future reference and programmatic querying
 persist_ndk_version()
@@ -227,7 +285,10 @@ for LINKAGE in $LINKAGES; do
         abi="$(abi_for_abi_name $ABI_NAME)"
         address_model="$(address_model_for_abi_name $ABI_NAME)"
         arch_for_abi="$(arch_for_abi_name $ABI_NAME)"
-        
+
+        export CLANG_TRIPLE_FOR_ABI="$(clang_triple_for_abi_name $ABI_NAME)"
+        export TOOL_TRIPLE_FOR_ABI="$(tool_triple_for_abi_name $ABI_NAME)"
+
         {
             ./b2 -q -j$num_cores    \
                 toolset=clang-$toolset_name     \

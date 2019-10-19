@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "in ranlib...." 
+exec ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/${TOOL_TRIPLE_FOR_ABI}-ranlib "$@"
+echo "out ranlib...." 

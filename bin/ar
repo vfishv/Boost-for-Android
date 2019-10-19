@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "in ar...." 
+exec ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/${TOOL_TRIPLE_FOR_ABI}-ar "$@"
+echo "out ar...." 

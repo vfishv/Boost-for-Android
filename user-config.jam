@@ -10,7 +10,7 @@ local ndk_bin_dir = $(ndk_dir_env)/toolchains/llvm/prebuilt/linux-x86_64/bin ;
 
 using clang : arm64v8a
 :
-aarch64-linux-android21-clang++ 
+clang++ 
 :
 
 ;
@@ -19,7 +19,7 @@ aarch64-linux-android21-clang++
 
 using clang : armeabiv7a
 :
-armv7a-linux-androideabi16-clang++ 
+clang++ 
 :
 
 ;
@@ -27,7 +27,7 @@ armv7a-linux-androideabi16-clang++
 
 using clang : x86
 :
-i686-linux-android16-clang++
+clang++
 :
 
 ;
@@ -36,7 +36,7 @@ i686-linux-android16-clang++
 
 using clang : x8664
 :
-x86_64-linux-android21-clang++ 
+clang++
 :
 
 ;
