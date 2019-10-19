@@ -327,31 +327,9 @@ build_boost_for_abi ()
             exit 1
     esac
 
-    local GCC_VERSION
-    case $LIBSTDCXX in
-        gnu-*)
-            GCC_VERSION=$(expr "$LIBSTDCXX" : "^gnu-\(.*\)$")
-            ;;
-        *)
-            GCC_VERSION=$DEFAULT_GCC_VERSION
-    esac
 
-    local LLVM_VERSION
-    case $LIBSTDCXX in
-        llvm-*)
-            LLVM_VERSION=$(expr "$LIBSTDCXX" : "^llvm-\(.*\)$")
-            ;;
-        *)
-            LLVM_VERSION=$DEFAULT_LLVM_VERSION
-    esac
-
-    local GCC_DIR=$NDK_DIR/toolchains/$TCNAME-$GCC_VERSION/prebuilt/$HOST_TAG
-    local LLVM_DIR=$NDK_DIR/toolchains/llvm-$LLVM_VERSION/prebuilt/$HOST_TAG
+    local LLVM_DIR=$NDK_DIR/toolchains/llvm/prebuilt/$HOST_TAG
     
-    # path_to_google_ndk/toolchains/llvm does not contain the version (eg .../toolchains/llvm-3.5) number so dont require it
-    if [ ! -d $LLVM_DIR ]; then
-        LLVM_DIR=$NDK_DIR/toolchains/llvm/prebuilt/$HOST_TAG
-    fi
 
     local SRCDIR=$BUILDDIR/src
     copy_directory $BOOST_SRCDIR $SRCDIR
@@ -569,14 +547,6 @@ EOF
         x86|x86_64)
             BJAMARCH=x86
             BJAMABI=sysv
-            ;;
-        mips)
-            BJAMARCH=mips1
-            BJAMABI=o32
-            ;;
-        mips64)
-            BJAMARCH=mips1
-            BJAMABI=o64
             ;;
         *)
             echo "ERROR: Unsupported CPU architecture: '$ARCH'" 1>&2
