@@ -323,9 +323,12 @@ for LINKAGE in $LINKAGES; do
         export BFA_TOOL_TRIPLE_FOR_ABI="$(tool_triple_for_abi_name $ABI_NAME)"
         export BFA_COMPILER_FLAGS_FOR_ABI="$(compiler_flags_for_abi_name $ABI_NAME)"
         export BFA_LINKER_FLAGS_FOR_ABI="$(linker_flags_for_abi_name $ABI_NAME)"
-
+        
+        echo "------------------------------------------------------------"| tee -a ${LOG_FILE}
+        echo "Building boost for: $ABI_NAME $LINKAGE"| tee -a ${LOG_FILE}
+        echo "------------------------------------------------------------"| tee -a ${LOG_FILE}
         # toolset=clang-$toolset_name     \
-                        
+                                   
         {
             ./b2 -q -j$num_cores    \
                 binary-format=elf \
