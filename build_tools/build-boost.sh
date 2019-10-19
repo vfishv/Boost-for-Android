@@ -75,13 +75,7 @@ The output will be placed in appropriate sub-directories of
 <ndk>/$BOOST_SUBDIR, but you can override this with the --out-dir=<path>
 option.
 "
-LOWEST_NDK_API_LEVEL=16   # this should be the lowest platform available in the ndk, for backward compatibility
-                          # eg $NDK_DIR/platforms/android-16/ -> 16 currently
-#                         # Will need to increase this at some future stage if/when ndk drops platform android-16 -> would be better to automatically detect this.
 
-__ANDROID_API__=$LOWEST_NDK_API_LEVEL # some code (including boost internal?) expects the (preprocessor (C) define) of __ANDROID_API__ to identify with which abi the android (ndk) library was built
-                                      # https://github.com/dec1/Boost-for-Android/issues/16
-                                      
 
 # override "sources/boost" in dev-defaults.sh 
 BOOST_SUBDIR=boost
@@ -220,16 +214,15 @@ build_boost_for_abi ()
 
     dump "Building Boost $LVERSION $ABI libraries (C++ stdlib: $LIBSTDCXX)"
 
-    local APILEVEL=$LOWEST_NDK_API_LEVEL   
-    if [ ${ABI%%64*} != ${ABI} ]; then
-        APILEVEL=$(($LOWEST_NDK_API_LEVEL>21 ? $LOWEST_NDK_API_LEVEL : 21))  # MAX(LOWEST_NDK_API_LEVEL, 21)
-    fi
 
     rm -Rf $BUILDDIR
     mkdir -p $BUILDDIR
     fail_panic "Couldn't create temporary build directory $BUILDDIR"
 
+    
+    #-----------------
     local TCNAME
+    local API_VERSION
     case $ABI in
         armeabi*)
             TCNAME=arm-linux-androideabi
@@ -250,7 +243,7 @@ build_boost_for_abi ()
             echo "ERROR: Unknown ABI: $ABI" 1>&2
             exit 1
     esac
-
+    #-----------------
     local TCPREFIX
     case $ABI in
         x86)
@@ -262,7 +255,7 @@ build_boost_for_abi ()
         *)
             TCPREFIX=$TCNAME
     esac
-
+    #-----------------
     local ARCH
     case $ABI in
         armeabi*)
@@ -274,7 +267,7 @@ build_boost_for_abi ()
         *)
             ARCH=$ABI
     esac
-
+    #------------------
     local FLAGS LFLAGS
     case $ABI in
         armeabi)
@@ -306,6 +299,23 @@ build_boost_for_abi ()
             ;;
     esac
 
+    #----------------------------------------------
+    local API_VERSION
+    case $ABI in
+
+    
+        armeabi-v7a|x86)
+            API_VERSION=16
+            ;;
+        arm64-v8a|x86_64)
+            API_VERSION=21
+            ;;
+        *)
+            echo "ERROR: Unknown ABI: $ABI" 1>&2
+            exit 1
+    esac
+    
+    #----------------------------------------------
     local LLVMTRIPLE
     case $ABI in
 
@@ -326,7 +336,7 @@ build_boost_for_abi ()
             echo "ERROR: Unknown ABI: '$ABI'" 1>&2
             exit 1
     esac
-
+    #----------------------------------------------
 
     local LLVM_DIR=$NDK_DIR/toolchains/llvm/prebuilt/$HOST_TAG
     
@@ -529,6 +539,10 @@ EOF
     for TOOL in as ar ranlib strip; do
         {
             echo "#!/bin/sh"
+            echo "GCC_DIR= " $GCC_DIR
+            echo "TCPREFIX= " $TCPREFIX
+            echo "TOOL= " $TOOL
+            echo "TMPTARGETTCDIR= " $TMPTARGETTCDIR
             echo "exec $GCC_DIR/bin/$TCPREFIX-$TOOL \"\$@\""
         } | mktool $TMPTARGETTCDIR/$TOOL
         fail_panic "Could not create target '$TOOL' wrapper"
@@ -593,12 +607,12 @@ EOF
         address-model=$BJAMADDRMODEL \
         architecture=$BJAMARCH \
         abi=$BJAMABI \
-        define=__ANDROID_API__=$APILEVEL \
+        define=__ANDROID_API__=$API_VERSION \
         --user-config=user-config.jam \
         --layout=system \
         --prefix=$PREFIX \
         --build-dir=$BUILDDIR/build \
-        $WITH \
+        $WITHOUT \
         install \
 
     fail_panic "Couldn't build Boost $BOOST_VERSION $ABI libraries"

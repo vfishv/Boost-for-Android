@@ -18,7 +18,7 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
 
-    string Str = "Hello from C++";
+    string Str = "Hello from C++ \n\n";
 
 
 
@@ -42,28 +42,16 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
     string Ver_Min = boost::lexical_cast<string>(ver_min);
     string Ver_Pat = boost::lexical_cast<string>(ver_pat);
 
-    Str += "\n Boost version: " + Ver_Maj + "." + Ver_Min + "." + Ver_Pat + "\n";
+    Str += "Boost version: " + Ver_Maj + "." + Ver_Min + "." + Ver_Pat + "\n";
 
-
-    #if defined(MY_HOLA)
-        Str += "hola .. \n";
-    #endif
-
-
-    #if defined(MY_BLA)
-        Str += "bla.. \n";
-    #endif
-
+    Str += "built with NDK version: " + string(BOOST_BUILT_WITH_NDK_VERSION) + "\n";
 
     #if defined(__ANDROID_API__)
-        Str += "android_api.. " + std::to_string(__ANDROID_API__) + " \n " ;
+        Str += "native Api level: " + std::to_string(__ANDROID_API__) + "\n " ;
         Str += "\n";
     #endif
 
-
-
-    Str += "... built with NDK version: " + string(BOOST_BUILT_WITH_NDK_VERSION) + "\n";
-    Str += "... says time is " + std::string(buffer) + "\n\n";
+    Str += "Boost chrono says time is \n" + std::string(buffer) + "\n\n";
     //--------------------------------------------
 
 
