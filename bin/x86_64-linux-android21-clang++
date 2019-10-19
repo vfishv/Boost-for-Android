@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+# include common function and variable definitions
+. `dirname $0`/base_clang++
+
+
+run ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang++ $PARAMS

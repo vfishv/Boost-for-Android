@@ -8,14 +8,14 @@ else
     LINKER=yes
 fi
 
-echo " .... LINKER = " $LINKER
+#echo " .... LINKER = " $LINKER
 
 # Remove any -m32/-m64 from input parameters
 PARAMS=`echo "$@" | tr ' ' '\n' | grep -v -x -e -m32 | grep -v -x -e -m64 | tr '\n' ' '`
 
 
 
-echo " .... PARMS (1)  = " $PARAMS
+#echo " .... PARMS (1)  = " $PARAMS
 
 if [ "x$LINKER" = "xyes" ]; then
     # Fix SONAME for shared libraries
@@ -55,7 +55,7 @@ if [ "x$LINKER" = "xyes" ]; then
     PARAMS=$NPARAMS
 fi
 
-echo " .... PARMS (2)  = " $PARAMS
+#echo " .... PARMS (2)  = " $PARAMS
 
 FLAGS=" -fno-integrated-as -fPIC"
 if [ "x$LINKER" = "xyes" ]; then
@@ -67,7 +67,7 @@ else
     FLAGS="$FLAGS -Wno-long-long"
 fi
 
-echo " .... FLAGS   = " $PARAMS
+#echo " .... FLAGS   = " $PARAMS
 
 PARAMS="$FLAGS $PARAMS"
 if [ "x$LINKER" = "xyes" ]; then
@@ -75,7 +75,7 @@ if [ "x$LINKER" = "xyes" ]; then
 fi
 
 
-echo " .... PARMS (3)  = " $PARAMS
+#echo " .... PARMS (3)  = " $PARAMS
 
 run()
 {
