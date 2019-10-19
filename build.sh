@@ -27,6 +27,14 @@ WITHOUT_LIBRARIES=--without-python
 WITH_LIBRARIES="--with-chrono --with-system"
 
 
+LOG_FILE=${BUILD_DIR}/build.log
+#empty logFile 
+if [ -f "$LOG_FILE" ]  
+then 
+    rm $LOG_FILE
+fi          
+    
+
 
 
 
@@ -73,7 +81,7 @@ clang_triple_for_abi_name() {
 tool_triple_for_abi_name() {
 
     local abi_name=$1
-    
+
     case "$abi_name" in
         arm64-v8a)      echo "aarch64-linux-android"
         ;;
@@ -289,9 +297,10 @@ for LINKAGE in $LINKAGES; do
         export CLANG_TRIPLE_FOR_ABI="$(clang_triple_for_abi_name $ABI_NAME)"
         export TOOL_TRIPLE_FOR_ABI="$(tool_triple_for_abi_name $ABI_NAME)"
 
+        # toolset=clang-$toolset_name     \
+                        
         {
             ./b2 -q -j$num_cores    \
-                toolset=clang-$toolset_name     \
                 binary-format=elf \
                 address-model=$address_model \
                 architecture=$arch_for_abi \
@@ -308,7 +317,7 @@ for LINKAGE in $LINKAGES; do
                 --libdir=${LIBS_DIR}/$ABI_NAME \
                 install 2>&1                 \
                 || { echo "Error: Failed to build boost for $ABI_NAME!";}
-        } | tee -a ${BUILD_DIR}/build.log
+        } | tee -a ${LOG_FILE}
         
     done # for ARCH in $ARCHLIST
     

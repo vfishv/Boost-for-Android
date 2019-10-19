@@ -1,5 +1,5 @@
 #!/bin/sh
 
-echo "in as...." 
+echo "in as....${TOOL_TRIPLE_FOR_ABI}" 
 exec ${NDK_DIR}/toolchains/llvm/prebuilt/linux-x86_64/bin/${TOOL_TRIPLE_FOR_ABI}-as "$@"
 echo "out as...." 
