@@ -151,23 +151,46 @@ address_model_for_abi_name() {
     esac
     
 }
-# #----------------------------------------------
-# native_api_version_for_abi_name() {
-# 
-#     local abi_name=$1
-#     
-#     case "$abi_name" in
-#         armeabi-v7a|x86)
-#             echo "16"
-#             ;;
-#         arm64-v8a|x86_64)
-#             echo "21"
-#             ;;
-#         *)
-#             echo "ERROR: Unknown ABI : $ABI" 1>&2
-#             exit 1
-#     esac
-# }    
+#----------------------------------------------
+compiler_flags_for_abi_name() {
+
+    local abi_name=$1
+    
+    COMMON_FLAGS="" #-fno-integrated-as -Wno-long-long"
+    local ABI_FLAGS
+    case "$abi_name" in
+        armeabi-v7a)
+            ABI_FLAGS="-march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp" 
+            ;;
+        arm64-v8a|x86|x86_64)
+            ;;
+        *)
+            echo "ERROR: Unknown ABI : $ABI" 1>&2
+            exit 1
+    esac
+    
+    echo "$COMMON_FLAGS $ABI_FLAGS"
+}  
+#----------------------------------------------
+linker_flags_for_abi_name() {
+
+    local abi_name=$1
+    
+    COMMON_FLAGS=""
+    local ABI_FLAGS
+    case "$abi_name" in
+        armeabi-v7a)
+            ABI_FLAGS="-Wl,--fix-cortex-a8"
+            ;;
+        arm64-v8a|x86|x86_64)
+            ;;
+        *)
+            echo "ERROR: Unknown ABI : $ABI" 1>&2
+            exit 1
+    esac
+    
+    echo "$COMMON_FLAGS $ABI_FLAGS"
+}   
 #----------------------------------------------------------------------------------
 # write the ndk version to a header file for future reference and programmatic querying
 persist_ndk_version()
@@ -283,6 +306,8 @@ echo " cores available = " $num_cores
 #------------------------------------------- 
                 
 
+    
+    
 
 
 for LINKAGE in $LINKAGES; do
@@ -294,8 +319,10 @@ for LINKAGE in $LINKAGES; do
         address_model="$(address_model_for_abi_name $ABI_NAME)"
         arch_for_abi="$(arch_for_abi_name $ABI_NAME)"
 
-        export CLANG_TRIPLE_FOR_ABI="$(clang_triple_for_abi_name $ABI_NAME)"
-        export TOOL_TRIPLE_FOR_ABI="$(tool_triple_for_abi_name $ABI_NAME)"
+        export BFA_CLANG_TRIPLE_FOR_ABI="$(clang_triple_for_abi_name $ABI_NAME)"
+        export BFA_TOOL_TRIPLE_FOR_ABI="$(tool_triple_for_abi_name $ABI_NAME)"
+        export BFA_COMPILER_FLAGS_FOR_ABI="$(compiler_flags_for_abi_name $ABI_NAME)"
+        export BFA_LINKER_FLAGS_FOR_ABI="$(linker_flags_for_abi_name $ABI_NAME)"
 
         # toolset=clang-$toolset_name     \
                         
