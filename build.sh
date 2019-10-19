@@ -178,12 +178,14 @@ fix_version_suffices() {
                 NEW_NAME=$(echo $FILE_NAME | grep -Po ${Re0}"(?="${Re1}")")
             # echo $File " ->" $NEW_NAME
                 mv $DIR_PATH/$File $DIR_PATH/$NEW_NAME
-                patchelf --set-soname $NEW_NAME $DIR_PATH/$NEW_NAME
+                # patchelf --set-soname $NEW_NAME $DIR_PATH/$NEW_NAME
             fi 
             
         done 
     done
 }
+
+
 #----------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------
 
@@ -216,7 +218,7 @@ echo " cores available = " $num_cores
                 
 
 
-                
+
 for LINKAGE in $LINKAGES; do
 
     for ABI_NAME in $ABI_NAMES; do
@@ -228,16 +230,16 @@ for LINKAGE in $LINKAGES; do
         
         {
             ./b2 -q -j$num_cores    \
+                toolset=clang-$toolset_name     \
                 binary-format=elf \
                 address-model=$address_model \
                 architecture=$arch_for_abi \
                 abi=$abi    \
-                toolset=clang-$toolset_name     \
                 link=$LINKAGE                  \
                 threading=multi              \
                 target-os=android           \
-                --ignore-site-config         \
                 --user-config=$USER_CONFIG_FILE \
+                --ignore-site-config         \
                 --layout=system           \
                 $WITH_LIBRARIES           \
                 --build-dir=${BUILD_DIR_TMP}/$ABI_NAME \
@@ -256,7 +258,7 @@ done # for LINKAGE in $LINKAGE_LIST
 
 persist_ndk_version
 
-# fix_version_suffices
+fix_version_suffices
 
 echo "built boost to "  ${PREFIX_DIR}
 
