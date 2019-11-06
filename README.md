@@ -2,7 +2,7 @@
 Build and/or simply download the Boost C++ Libraries for the Android platform, with Google's Ndk.
 
 The [Boost C++ Libraries](http://www.boost.org/), are possibly *the* most popular and generally useful c++ libraries. It would be nice to be able to use them when developing (native c++ or hybrid java/c++ with Google's [Ndk](https://developer.android.com/ndk/)) apps and/or libraries for Android devices.
-The Boost libraries are written to be cross platform, and are available in source code format. However, building the libraries for a given target platform like Android can be very difficult and time consuming. (In particular, building **arm64_v8a** shared libraries that an application can actually load). This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android (abstracting away all the details of the underlying custom boost build system, and traget architecture differences), and even providing standard prebuilt binaries to get you started fast.
+The Boost libraries are written to be cross platform, and are available in source code format. However, building the libraries for a given target platform like Android can be very difficult and time consuming. (In particular, building **arm64_v8a** shared libraries that an application can actually load). This project aims to lower the barrier by offering a simple customizable build script you can use to build Boost for Android (abstracting away all the details of the underlying custom boost build system, and target architecture differences), and even providing standard prebuilt binaries to get you started fast.
 
 Tested with **Boost 1.71.0** and **Google's Ndk 20**  (current versions as of October 2019).
 
@@ -29,9 +29,8 @@ This way you need not need to install any build tools or other prerequisites, an
 See [docker_readme](./docker/docker_readme.md) for instructions.
 
 ### Build directly on your Linux machine
-https://github.com/dec1/Boost-for-Android/blob/b439cd36ef83f59b83b4638d7bbfe86a981cad58/docker/droid_base#L18
 
-* For prerequisites see [Dockerflile](./docker/droid_base#L18) (even though the rest of these instructions don't use docker)
+* For prerequisites see [Dockerflile](./docker/droid_base#L18) (even though the remaining instructions below don't use docker)
 * Download the [boost source](https://www.boost.org) and extract to a directory of the form *..../major.minor.patch* 
   eg */home/declan/Documents/zone/mid/lib/boost/1.71.0* 
   If necessary, fix any bugs in boost  (eg for [1.71.0](https://github.com/boostorg/build/issues/385)).
