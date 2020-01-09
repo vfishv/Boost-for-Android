@@ -1,15 +1,22 @@
 #include <jni.h>
 #include <string>
 
+#include <stdio.h>
+#include <boost/filesystem.hpp>
+using namespace boost::filesystem;
 
-#include <boost/chrono.hpp>
-#include <boost/lexical_cast.hpp>
+
+//#include <boost/chrono.hpp>
+//#include <boost/lexical_cast.hpp>
 
 // when building boost we persisted the NDK version used (BOOST_BUILT_WITH_NDK_VERSION) in this custom header file
-#include <boost/version_ndk.hpp>
+//#include <boost/version_ndk.hpp>
 
 
 using std::string;
+
+//#include <iostream>
+//using std::cout;
 
 extern "C" JNIEXPORT jstring
 
@@ -18,8 +25,18 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
 
-    string Str = "Hello from C++";
+    string Str = "Hello from C++ ";
 
+    boost::filesystem::path path("/sdcard"); // random pathname
+
+
+
+    bool result = boost::filesystem::is_directory(path);
+    printf("Path is a directory : %d\n", result);
+
+    Str += result ? "true" : "false";
+
+/*
     //-------------------------------------
     boost::chrono::system_clock::time_point p  = boost::chrono::system_clock::now();
     std::time_t t = boost::chrono::system_clock::to_time_t(p);
@@ -42,7 +59,7 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
     Str += "... built with NDK version: " + string(BOOST_BUILT_WITH_NDK_VERSION) + "\n";
     Str += "... says time is " + std::string(buffer) + "\n\n";
     //--------------------------------------------
-
+*/
 
     return env->NewStringUTF(Str.c_str());;
 
