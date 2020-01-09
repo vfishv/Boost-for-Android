@@ -15,8 +15,8 @@ using namespace boost::filesystem;
 
 using std::string;
 
-//#include <iostream>
-//using std::cout;
+#include <iostream>
+using std::cout;
 
 extern "C" JNIEXPORT jstring
 
@@ -28,6 +28,35 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
     string Str = "Hello from C++ ";
 
     boost::filesystem::path path("/sdcard"); // random pathname
+
+    /*
+    boost::filesystem::path::iterator pathI = path.begin();
+    Str +="\n";
+    while (pathI != path.end())
+    {
+        Str += pathI->string();
+        Str +="\n";
+        std::cout << *pathI << std::endl;
+        ++pathI;
+    }
+    */
+
+    if (boost::filesystem::exists(path))
+    {
+        Str +="\n";
+        boost::filesystem::directory_iterator end_iter;
+        for (boost::filesystem::directory_iterator iter(path); iter != end_iter;++iter)
+        {
+            Str += iter->path().string();
+            Str +="\n";
+            if (boost::filesystem::is_directory(iter->status()))
+            {
+                //filenames.push_back(iter->path().string());
+            }
+        }
+    }
+
+
 
 
 
