@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.4.1)
 
 
 #-----------------------------------------
-add_library (native-lib  SHARED
+add_library (fvnative  SHARED
              src/main/cpp/native-lib.cpp)
 
 
@@ -33,7 +33,7 @@ find_library (log-lib log)
 
 #-----------------------------------------
 target_link_libraries( # Specifies the target library.
-                       native-lib
+                       fvnative
 
                        ${log-lib}
 
