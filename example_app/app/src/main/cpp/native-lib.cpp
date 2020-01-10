@@ -90,6 +90,6 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
     //--------------------------------------------
 */
 
-    return env->NewStringUTF(Str.c_str());;
+    return env->NewStringUTF(Str.c_str());
 
 }
