@@ -47,7 +47,8 @@ Java_com_example_declan_myapplication_MainActivity_stringFromJNI(
         boost::filesystem::directory_iterator end_iter;
         for (boost::filesystem::directory_iterator iter(path); iter != end_iter;++iter)
         {
-            Str += iter->path().string();
+            Str += iter->path().filename().string();
+            //Str += iter->path().string();
             Str +="\n";
             if (boost::filesystem::is_directory(iter->status()))
             {
